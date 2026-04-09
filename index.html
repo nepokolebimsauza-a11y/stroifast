@@ -1,0 +1,4129 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" id="viewportMeta" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <script>
+    (function () {
+      try {
+        var forceDesktop = localStorage.getItem('stroifast_force_desktop_mobile') === '1';
+        if (!forceDesktop) return;
+        var m = document.getElementById('viewportMeta');
+        if (m) m.setAttribute('content', 'width=1280');
+      } catch (e) {}
+    })();
+  </script>
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <title>СтройФаст - Магазин строительных материалов с разгрузкой и доставкой</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha384-t1nt8BQoYMLFN5p42tRAtuAAFQaCQODekUVeKKZrEnEyp4H2R0RHFz0KWpmj7i8g" crossorigin="anonymous">
+  <style>
+    :root {
+      --text: #0f172a;
+      --bg: #f8fafc;
+      --muted: #475569;
+      --border: #dbe3ee;
+      --btn-bg: #e8eef9;
+      --btn-hover-bg: #1d4ed8;
+      --btn-hover-text: #ffffff;
+      --accent: #2563eb;
+      --accent-hover: #1d4ed8;
+      --on-accent: #ffffff;
+      --accent-soft: #eff6ff;
+      --footer: #0b1220;
+      --shadow: 0 6px 16px rgba(37, 99, 235, 0.16);
+      --radius-card: 12px;
+      --pad-card: 16px;
+      --line: 1.4;
+      --available: #16a34a;
+      --order: #d97706;
+      --section-rule: #cdd7e5;
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, Roboto, "Segoe UI", sans-serif;
+      font-size: 16px;
+      line-height: var(--line);
+      color: var(--text);
+      background: var(--bg);
+    }
+
+    img {
+      max-width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 16px;
+    }
+
+    /* Top bar */
+    .top-bar {
+      background: #fafafa;
+      border-bottom: 1px solid var(--section-rule);
+      font-size: 14px;
+    }
+
+    .top-bar .inner {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 10px 16px;
+      padding: 10px 0;
+    }
+
+    .top-bar a:hover {
+      text-decoration: underline;
+    }
+
+    .top-bar .contacts {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 16px;
+    }
+
+    /* Мессенджеры в шапке */
+    .header-messengers {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      flex-shrink: 0;
+    }
+
+    .header-messengers a {
+      font-size: 19px;
+      color: var(--muted);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      transition: background 0.2s, color 0.2s;
+    }
+
+    .header-messengers a:hover {
+      color: var(--accent);
+      background: var(--accent-soft);
+    }
+
+    .header-messengers a .icon-max {
+      display: block;
+      width: 19px;
+      height: 19px;
+      flex-shrink: 0;
+    }
+
+    /* Header */
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: var(--bg);
+      border-bottom: 1px solid var(--section-rule);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    }
+
+    .site-header .inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 14px 0;
+    }
+
+    .site-header .container {
+      position: relative;
+    }
+
+    .header-with-mega .site-header {
+      z-index: 60;
+    }
+
+    .header-toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 0 10px;
+    }
+
+    .header-toolbar .logo {
+      flex: 0 0 auto;
+    }
+
+    .btn-catalog {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 0 18px;
+      min-height: 44px;
+      font-family: inherit;
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--on-accent);
+      background: var(--accent);
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(43, 38, 253, 0.35);
+      transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+      flex: 0 0 auto;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .btn-catalog:hover,
+    .btn-catalog:focus-visible {
+      background: var(--accent-hover);
+      outline: none;
+    }
+
+    .btn-catalog.is-open {
+      box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.35);
+    }
+
+    .btn-catalog .btn-catalog-x {
+      display: none;
+      font-size: 1.25rem;
+      line-height: 1;
+      font-weight: 600;
+    }
+
+    .btn-catalog .btn-catalog-burger {
+      font-size: 16px;
+    }
+
+    .btn-catalog.is-open .btn-catalog-burger {
+      display: none;
+    }
+
+    .btn-catalog.is-open .btn-catalog-x {
+      display: inline;
+    }
+
+    .header-search {
+      display: flex;
+      align-items: stretch;
+      flex: 1 1 180px;
+      min-width: 120px;
+      max-width: 560px;
+      border: 1px solid #d8d8d8;
+      border-radius: 10px;
+      overflow: hidden;
+      background: #fff;
+    }
+
+    .header-search input {
+      flex: 1;
+      min-width: 0;
+      padding: 10px 14px;
+      font-family: inherit;
+      font-size: 14px;
+      border: none;
+      outline: none;
+    }
+
+    .header-search-btn {
+      flex-shrink: 0;
+      padding: 0 18px;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--on-accent);
+      background: var(--accent);
+      border: none;
+      cursor: pointer;
+      transition: background 0.2s;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .header-search-btn:hover,
+    .header-search-btn:focus-visible {
+      background: var(--accent-hover);
+    }
+
+    .header-nav-secondary {
+      display: none;
+      justify-content: center;
+      gap: 28px;
+      padding: 0 0 12px;
+      border-top: 1px solid var(--border);
+      margin: 0;
+    }
+
+    .header-nav-secondary a {
+      font-weight: 500;
+      font-size: 15px;
+      padding-top: 10px;
+    }
+
+    .header-nav-secondary a:hover {
+      color: var(--accent);
+    }
+
+    @media (min-width: 768px) {
+      .header-nav-secondary {
+        display: flex;
+      }
+    }
+
+    @media (max-width: 767px) {
+      .header-toolbar {
+        gap: 8px;
+        padding: 10px 0 10px;
+      }
+
+      .header-toolbar .logo {
+        font-size: 2rem;
+      }
+
+      .header-toolbar .logo {
+        order: 1;
+      }
+
+      .header-toolbar .header-right {
+        order: 2;
+        margin-left: auto;
+      }
+
+      .header-toolbar .btn-catalog {
+        order: 3;
+        flex: 1 1 100%;
+        width: 100%;
+      }
+
+      .header-toolbar .header-search {
+        order: 4;
+        flex: 1 1 100%;
+        max-width: none;
+      }
+
+      .header-search input {
+        padding: 10px 12px;
+        font-size: 13px;
+      }
+
+      .header-search-btn {
+        min-width: 92px;
+        padding: 0 14px;
+      }
+    }
+
+    @media (min-width: 768px) {
+      .header-toolbar {
+        flex-wrap: nowrap;
+        padding: 14px 0 0;
+      }
+
+      .header-toolbar .header-right {
+        margin-left: 0;
+      }
+    }
+
+    .logo {
+      font-weight: 700;
+      font-size: 1.35rem;
+      letter-spacing: -0.02em;
+      color: var(--text);
+    }
+
+    .logo span {
+      color: var(--accent);
+    }
+
+    .nav-desktop {
+      display: none;
+      align-items: center;
+      gap: 28px;
+    }
+
+    .nav-desktop a {
+      font-weight: 500;
+      font-size: 15px;
+    }
+
+    .nav-desktop a:hover {
+      color: var(--muted);
+    }
+
+    .nav-toggle {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 44px;
+      height: 44px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: var(--btn-bg);
+      cursor: pointer;
+      border: none;
+    }
+
+    .nav-toggle:hover,
+    .nav-toggle:focus-visible {
+      background: var(--btn-hover-bg);
+      color: var(--btn-hover-text);
+    }
+
+    .nav-mobile {
+      display: none;
+      padding-bottom: 16px;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .nav-mobile.is-open {
+      display: flex;
+    }
+
+    .nav-mobile a {
+      padding: 12px;
+      border-radius: 10px;
+      background: #fafafa;
+      font-weight: 500;
+    }
+
+    @media (min-width: 768px) {
+      .nav-toggle {
+        display: none;
+      }
+
+      .nav-desktop {
+        display: flex;
+      }
+
+      .nav-mobile {
+        display: none !important;
+      }
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 20px;
+      font-family: inherit;
+      font-size: 15px;
+      font-weight: 600;
+      line-height: 1.2;
+      color: var(--text);
+      background: var(--btn-bg);
+      border: 1px solid #e0e0e0;
+      border-radius: 10px;
+      cursor: pointer;
+      text-align: center;
+      transition: background 0.2s, color 0.2s, border-color 0.2s;
+    }
+
+    .btn:hover,
+    .btn:focus-visible {
+      background: var(--btn-hover-bg);
+      color: var(--btn-hover-text);
+      border-color: var(--btn-hover-bg);
+      outline: none;
+    }
+
+    .btn-block {
+      width: 100%;
+    }
+
+    .btn-lg {
+      padding: 16px 28px;
+      font-size: 17px;
+    }
+
+    .btn:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+
+    /* Каталог: мегаменю (референс Петрович) */
+    body.catalog-mega-open {
+      overflow: hidden;
+    }
+
+    .catalog-mega {
+      position: fixed;
+      inset: 0;
+      z-index: 55;
+      pointer-events: none;
+      visibility: hidden;
+      opacity: 0;
+      transition: opacity 0.2s ease, visibility 0.2s;
+    }
+
+    .catalog-mega.is-open {
+      pointer-events: auto;
+      visibility: visible;
+      opacity: 1;
+    }
+
+    .catalog-mega-backdrop {
+      position: absolute;
+      inset: 0;
+      top: var(--mega-top, 64px);
+      background: rgba(0, 0, 0, 0.38);
+    }
+
+    .catalog-mega-panel {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: var(--mega-top, 64px);
+      max-height: min(85vh, calc(100vh - var(--mega-top, 64px)));
+      background: #fff;
+      box-shadow: 0 12px 48px rgba(0, 0, 0, 0.14);
+      display: flex;
+      overflow: hidden;
+    }
+
+    .catalog-mega-panel .container {
+      display: flex;
+      max-width: 1200px;
+      margin: 0 auto;
+      width: 100%;
+      padding: 0 16px;
+      min-height: 0;
+    }
+
+    .catalog-mega-side {
+      width: 286px;
+      flex-shrink: 0;
+      border-right: 1px solid #e8e8e8;
+      display: flex;
+      flex-direction: column;
+      max-height: min(85vh, calc(100vh - var(--mega-top, 64px)));
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      padding: 8px 0;
+    }
+
+    .catalog-mega-side-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      width: 100%;
+      padding: 11px 14px 11px 12px;
+      font-family: inherit;
+      font-size: 15px;
+      font-weight: 500;
+      color: #1a1a1a;
+      text-align: left;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      transition: background 0.15s;
+      border-radius: 0;
+    }
+
+    .catalog-mega-side-item i {
+      width: 22px;
+      text-align: center;
+      color: #555;
+      font-size: 15px;
+      flex-shrink: 0;
+    }
+
+    .catalog-mega-side-item:hover,
+    .catalog-mega-side-item:focus-visible {
+      background: #f4f4f4;
+      outline: none;
+    }
+
+    .catalog-mega-side-item.is-active {
+      background: #efefef;
+      font-weight: 600;
+    }
+
+    .catalog-mega-divider {
+      height: 1px;
+      margin: 8px 12px;
+      background: #e0e0e0;
+    }
+
+    .catalog-mega-side-foot a {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 11px 14px 11px 12px;
+      font-size: 15px;
+      font-weight: 500;
+      color: #1a1a1a;
+      border-radius: 0;
+    }
+
+    .catalog-mega-side-foot a i {
+      width: 22px;
+      text-align: center;
+      color: #555;
+    }
+
+    .catalog-mega-side-foot a:hover {
+      background: #f4f4f4;
+    }
+
+    .catalog-mega-body {
+      flex: 1;
+      min-width: 0;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      padding: 20px 12px 24px 24px;
+      max-height: min(85vh, calc(100vh - var(--mega-top, 64px)));
+    }
+
+    .catalog-mega-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px 28px;
+      align-content: start;
+    }
+
+    @media (max-width: 1100px) {
+      .catalog-mega-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 900px) {
+      .catalog-mega-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 767px) {
+      .catalog-mega-panel .container {
+        flex-direction: column;
+        padding: 0;
+      }
+
+      .catalog-mega-side {
+        width: 100%;
+        max-height: 38vh;
+        border-right: none;
+        border-bottom: 1px solid #e8e8e8;
+        flex-direction: row;
+        flex-wrap: wrap;
+        padding: 8px;
+        gap: 4px;
+      }
+
+      .catalog-mega-side-item,
+      .catalog-mega-side-foot a {
+        flex: 1 1 auto;
+        min-width: 140px;
+        border-radius: 8px;
+        padding: 10px;
+      }
+
+      .catalog-mega-divider {
+        width: 100%;
+        margin: 6px 0;
+      }
+
+      .catalog-mega-body {
+        padding: 16px;
+        max-height: none;
+      }
+    }
+
+    .mega-col-title {
+      margin: 0 0 10px;
+      font-size: 15px;
+      font-weight: 700;
+      color: #111;
+      line-height: 1.3;
+    }
+
+    .mega-link-list {
+      list-style: none;
+      margin: 0 0 20px;
+      padding: 0;
+    }
+
+    .mega-link-list li {
+      margin: 0 0 6px;
+    }
+
+    .mega-link {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 10px;
+      width: 100%;
+      font-size: 14px;
+      color: #1a1a1a;
+      text-decoration: none;
+      padding: 2px 0;
+      border: none;
+      background: none;
+      font-family: inherit;
+      cursor: pointer;
+      text-align: left;
+    }
+
+    .mega-link:hover {
+      color: #666;
+    }
+
+    .mega-link-count {
+      flex-shrink: 0;
+      font-size: 13px;
+      color: #9a9a9a;
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* Hero */
+    .hero {
+      padding: 48px 0 40px;
+      background: linear-gradient(180deg, var(--accent-soft) 0%, #fff 100%);
+    }
+
+    .hero h1 {
+      margin: 0 0 12px;
+      font-size: clamp(1.75rem, 4vw, 2.35rem);
+      font-weight: 700;
+      line-height: 1.25;
+    }
+
+    .hero p {
+      margin: 0 0 24px;
+      color: var(--muted);
+      max-width: 520px;
+    }
+
+    /* Sections */
+    .section {
+      padding: 48px 0;
+      border-top: 1px solid var(--section-rule);
+    }
+
+    .section-title {
+      margin: 0 0 8px;
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
+
+    .section-lead {
+      margin: 0 0 24px;
+      color: var(--muted);
+      max-width: 640px;
+    }
+
+    .section-head {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    /* Catalog filters */
+    .filters {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .filter-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .filter-label {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--muted);
+      margin-right: 4px;
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .chip {
+      padding: 8px 14px;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 500;
+      border: none;
+      border-radius: 999px;
+      background: var(--btn-bg);
+      color: var(--text);
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+    }
+
+    .chip:hover {
+      background: #eaeaea;
+    }
+
+    .chip.is-active {
+      background: var(--accent);
+      color: var(--on-accent);
+    }
+
+    .checkbox-inline {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .checkbox-inline input {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--accent);
+    }
+
+    .sort-select {
+      padding: 10px 14px;
+      font-family: inherit;
+      font-size: 14px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: var(--bg);
+      min-width: 200px;
+    }
+
+    /* Product grid */
+    .catalog-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+
+    @media (min-width: 640px) {
+      .catalog-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (min-width: 1024px) {
+      .catalog-grid {
+        grid-template-columns: repeat(4, 1fr);
+      }
+    }
+
+    .product-card {
+      display: flex;
+      flex-direction: column;
+      padding: var(--pad-card);
+      border-radius: var(--radius-card);
+      background: var(--bg);
+      box-shadow: var(--shadow);
+      transition: box-shadow 0.2s;
+      overflow: hidden;
+    }
+
+    .product-card:hover {
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+    }
+
+    .product-card.is-hidden {
+      display: none;
+    }
+
+    .product-media {
+      margin: calc(-1 * var(--pad-card)) calc(-1 * var(--pad-card)) 12px;
+      background: #f5f5f5;
+      aspect-ratio: 1 / 1;
+      border-radius: var(--radius-card) var(--radius-card) 0 0;
+      overflow: hidden;
+    }
+
+    .product-media img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      object-position: center;
+      display: block;
+    }
+
+    .product-brand {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-bottom: 6px;
+    }
+
+    .product-title {
+      font-size: 16px;
+      font-weight: 600;
+      margin: 0 0 8px;
+      line-height: 1.35;
+    }
+
+    .product-desc {
+      font-size: 14px;
+      color: var(--muted);
+      margin: 0 0 12px;
+      flex-grow: 1;
+    }
+
+    .product-stock {
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .product-stock.in-stock {
+      color: var(--available);
+    }
+
+    .product-stock.on-order {
+      color: var(--order);
+    }
+
+    /* Brands */
+    .brands-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+
+    @media (min-width: 640px) {
+      .brands-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    @media (min-width: 900px) {
+      .brands-grid {
+        grid-template-columns: repeat(6, 1fr);
+      }
+    }
+
+    .brand-tile {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 72px;
+      padding: 16px;
+      border-radius: var(--radius-card);
+      background: #fafafa;
+      border: 1px solid var(--border);
+      font-weight: 600;
+      font-size: 14px;
+      text-align: center;
+      color: var(--muted);
+    }
+
+    /* Calculator */
+    .calc-block {
+      background: #fafafa;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-card);
+      padding: 24px;
+      max-width: 560px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    @media (max-width: 767px) {
+      .calc-block {
+        padding: 18px 16px;
+        max-width: none;
+      }
+
+      .calc-actions {
+        flex-direction: column;
+      }
+
+      .calc-actions .btn {
+        width: 100%;
+      }
+    }
+
+    .form-row {
+      margin-bottom: 16px;
+    }
+
+    .form-row label {
+      display: block;
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .form-row input,
+    .form-row select {
+      width: 100%;
+      padding: 12px 14px;
+      font-family: inherit;
+      font-size: 15px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+    }
+
+    .calc-result {
+      margin-top: 16px;
+      padding: 16px;
+      border-radius: 10px;
+      background: #fff;
+      border: 1px dashed var(--border);
+      font-weight: 600;
+      min-height: 52px;
+      display: none;
+    }
+
+    .calc-result.is-visible {
+      display: block;
+    }
+
+    .calc-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .calc-advanced {
+      margin-top: 20px;
+      padding-top: 18px;
+      border-top: 1px dashed var(--border);
+    }
+
+    .calc-advanced summary {
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 15px;
+      margin-bottom: 12px;
+      user-select: none;
+    }
+
+    .calc-breakdown {
+      margin-top: 12px;
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .form-row-inline {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    @media (max-width: 560px) {
+      .form-row-inline {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .form-hint {
+      font-size: 12px;
+      font-weight: 400;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    /* Доставка — лёгкий акцент (бирюзово-серый) */
+    .delivery-block {
+      background: linear-gradient(165deg, #eef8f6 0%, #f4faf9 45%, #f0f5f8 100%);
+      border: 1px solid #b5d4d0;
+      border-radius: var(--radius-card);
+      padding: 22px 22px 20px;
+      margin-bottom: 20px;
+      max-width: 720px;
+      width: 100%;
+      box-shadow: 0 2px 16px rgba(23, 112, 96, 0.08);
+    }
+
+    .delivery-block .delivery-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: rgba(23, 112, 96, 0.12);
+      color: #1d6b5c;
+      font-size: 18px;
+      margin-bottom: 10px;
+    }
+
+    .delivery-block h3 {
+      margin: 0 0 6px;
+      font-size: 1.2rem;
+      color: #164d43;
+    }
+
+    .delivery-block .delivery-lead {
+      margin: 0 0 18px;
+      font-size: 14px;
+      color: #3d5c56;
+      line-height: 1.45;
+    }
+
+    .delivery-block .form-row label {
+      color: #25403a;
+    }
+
+    .delivery-block .form-row input,
+    .delivery-block .form-row textarea {
+      background: rgba(255, 255, 255, 0.92);
+      border-color: #a8ccc6;
+    }
+
+    .delivery-block .form-row textarea {
+      min-height: 72px;
+      resize: vertical;
+      width: 100%;
+      padding: 12px 14px;
+      font-family: inherit;
+      font-size: 15px;
+      border-radius: 10px;
+      box-sizing: border-box;
+    }
+
+    .delivery-estimate {
+      margin-top: 14px;
+      padding: 14px 16px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.85);
+      border: 1px dashed #7eb8ad;
+      font-size: 14px;
+      color: #1a3d36;
+      display: none;
+    }
+
+    .delivery-estimate.is-visible {
+      display: block;
+    }
+
+    .delivery-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    @media (max-width: 767px) {
+      .delivery-block {
+        padding: 18px 16px;
+        max-width: none;
+      }
+
+      .delivery-block .form-row input,
+      .delivery-block .form-row textarea {
+        font-size: 16px;
+      }
+
+      .delivery-actions .btn {
+        flex: 1;
+        min-width: 140px;
+      }
+    }
+
+    /* Services */
+    .services-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+
+    @media (min-width: 768px) {
+      .services-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    .service-card {
+      padding: var(--pad-card);
+      border-radius: var(--radius-card);
+      box-shadow: var(--shadow);
+      background: var(--bg);
+    }
+
+    .service-card .icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      background: var(--btn-bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      margin-bottom: 12px;
+      color: var(--text);
+    }
+
+    .service-card h3 {
+      margin: 0 0 8px;
+      font-size: 1.1rem;
+    }
+
+    .service-card p {
+      margin: 0;
+      font-size: 14px;
+      color: var(--muted);
+    }
+
+    /* Recommendations */
+    .rec-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+
+    @media (min-width: 768px) {
+      .rec-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    .rec-card {
+      padding: var(--pad-card);
+      border-radius: var(--radius-card);
+      box-shadow: var(--shadow);
+      background: var(--bg);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .rec-card h3 {
+      margin: 0 0 8px;
+      font-size: 1rem;
+    }
+
+    .rec-card p {
+      margin: 0 0 12px;
+      font-size: 14px;
+      color: var(--muted);
+      flex-grow: 1;
+    }
+
+    .rec-media {
+      margin: calc(-1 * var(--pad-card)) calc(-1 * var(--pad-card)) 12px;
+      background: #f5f5f5;
+      aspect-ratio: 4 / 3;
+      border-radius: var(--radius-card) var(--radius-card) 0 0;
+      overflow: hidden;
+    }
+
+    .rec-media img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      object-position: center;
+      display: block;
+    }
+
+    /* Линии + подпись перед футером (как у Петровича) */
+    .pre-footer-tagline {
+      padding: 40px 16px 44px;
+      background: var(--bg);
+      text-align: center;
+      border-top: 1px solid var(--section-rule);
+    }
+
+    .pre-footer-tagline__inner {
+      display: inline-block;
+      margin: 0 auto;
+      padding: 14px clamp(1.5rem, 6vw, 3rem);
+      border-top: 1px solid rgba(43, 38, 253, 0.28);
+      border-bottom: 1px solid rgba(43, 38, 253, 0.28);
+    }
+
+    .pre-footer-tagline__text {
+      margin: 0;
+      font-size: clamp(11px, 2.5vw, 13px);
+      font-weight: 500;
+      line-height: 1.4;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: #6b66c4;
+      white-space: nowrap;
+    }
+
+    @media (max-width: 480px) {
+      .pre-footer-tagline__text {
+        white-space: normal;
+        letter-spacing: 0.14em;
+        max-width: 16em;
+        margin-left: auto;
+        margin-right: auto;
+      }
+    }
+
+    /* Footer */
+    .site-footer {
+      background: var(--footer);
+      color: #e8e8e8;
+      padding: 40px 0 24px;
+      font-size: 14px;
+      border-top: 1px solid var(--section-rule);
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 24px;
+      margin-bottom: 28px;
+    }
+
+    @media (min-width: 640px) {
+      .footer-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (min-width: 900px) {
+      .footer-grid {
+        grid-template-columns: repeat(4, 1fr);
+      }
+    }
+
+    .site-footer h3 {
+      margin: 0 0 12px;
+      font-size: 15px;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .site-footer ul {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .site-footer li {
+      margin-bottom: 8px;
+    }
+
+    .site-footer a {
+      color: #c9c7ff;
+    }
+
+    .site-footer a:hover {
+      text-decoration: underline;
+      color: #fff;
+    }
+
+    .site-footer .footer-max {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      vertical-align: middle;
+    }
+
+    .site-footer .footer-max-icon {
+      flex-shrink: 0;
+    }
+
+    .site-footer .footer-contact-icon {
+      flex-shrink: 0;
+      font-size: 16px;
+      line-height: 1;
+    }
+
+    .footer-bottom {
+      padding-top: 20px;
+      border-top: 1px solid rgba(255, 255, 255, 0.12);
+      color: #9ca3af;
+      font-size: 13px;
+    }
+
+    /* Modal */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.45);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: max(12px, env(safe-area-inset-top, 0px)) max(12px, env(safe-area-inset-right, 0px)) max(12px, env(safe-area-inset-bottom, 0px)) max(12px, env(safe-area-inset-left, 0px));
+      z-index: 200;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.2s, visibility 0.2s;
+      overscroll-behavior: contain;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .modal-backdrop.is-open {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .modal {
+      width: 100%;
+      max-width: 440px;
+      max-height: calc(100vh - 48px);
+      max-height: min(92dvh, calc(100dvh - max(24px, env(safe-area-inset-top, 0px) + env(safe-area-inset-bottom, 0px))));
+      min-height: 0;
+      overflow-x: hidden;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior: contain;
+      touch-action: pan-y;
+      background: var(--bg);
+      border-radius: 14px;
+      padding: 24px;
+      padding-left: max(24px, env(safe-area-inset-left, 0px));
+      padding-right: max(24px, env(safe-area-inset-right, 0px));
+      box-shadow: 0 24px 48px rgba(0, 0, 0, 0.2);
+      transform: scale(0.96);
+      transition: transform 0.2s;
+    }
+
+    .modal-backdrop.is-open .modal {
+      transform: scale(1);
+    }
+
+    @media (max-width: 767px) {
+      .modal {
+        padding: 20px 16px;
+        padding-left: max(16px, env(safe-area-inset-left, 0px));
+        padding-right: max(16px, env(safe-area-inset-right, 0px));
+        max-height: calc(100vh - 24px);
+        max-height: min(94dvh, calc(100svh - 16px));
+      }
+
+      .modal-header h2 {
+        font-size: 1.15rem;
+        padding-right: 8px;
+      }
+
+      .modal-form input[type="text"],
+      .modal-form input[type="tel"],
+      .modal-form textarea {
+        font-size: 16px;
+      }
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .modal-header h2 {
+      margin: 0;
+      font-size: 1.25rem;
+    }
+
+    .modal-close {
+      flex-shrink: 0;
+      width: 36px;
+      height: 36px;
+      border: none;
+      border-radius: 8px;
+      background: var(--btn-bg);
+      cursor: pointer;
+      font-size: 18px;
+      line-height: 1;
+    }
+
+    .modal-close:hover,
+    .modal-close:focus-visible {
+      background: var(--btn-hover-bg);
+      color: var(--btn-hover-text);
+    }
+
+    .modal-form .form-row {
+      margin-bottom: 14px;
+    }
+
+    .modal-form textarea {
+      width: 100%;
+      min-height: 88px;
+      padding: 12px 14px;
+      font-family: inherit;
+      font-size: 15px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      resize: vertical;
+    }
+
+    .radio-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .radio-group label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 400;
+      cursor: pointer;
+    }
+
+    .radio-group input {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--accent);
+    }
+
+    .visually-hidden {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    .visually-hidden-focus:focus {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+
+    body.modal-open {
+      overflow: hidden;
+    }
+
+    body.cart-open {
+      overflow: hidden;
+    }
+
+    /* Header cart (Озон / WB style) */
+    .nav-wrap {
+      display: none;
+      justify-content: center;
+    }
+
+    @media (min-width: 768px) {
+      .nav-wrap {
+        display: flex;
+      }
+    }
+
+    .header-right {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-shrink: 0;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .cart-header-btn {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      min-height: 44px;
+      padding: 0 20px 0 16px;
+      border: none;
+      border-radius: 12px;
+      background: var(--btn-bg);
+      color: var(--text);
+      cursor: pointer;
+      font-size: 18px;
+      transition: background 0.2s, color 0.2s;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .cart-header-btn-label {
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 1.2;
+      letter-spacing: 0.01em;
+      white-space: nowrap;
+    }
+
+    .cart-header-btn:hover,
+    .cart-header-btn:focus-visible {
+      background: var(--btn-hover-bg);
+      color: var(--btn-hover-text);
+      outline: none;
+    }
+
+    .cart-header-btn .cart-badge {
+      position: absolute;
+      top: 4px;
+      right: 8px;
+      min-width: 18px;
+      height: 18px;
+      padding: 0 5px;
+      font-size: 11px;
+      font-weight: 700;
+      line-height: 18px;
+      text-align: center;
+      color: var(--on-accent);
+      background: var(--accent);
+      border-radius: 99px;
+      display: none;
+    }
+
+    .cart-header-btn.has-items .cart-badge {
+      display: block;
+    }
+
+    .cart-header-btn.has-items {
+      padding-right: 26px;
+    }
+
+    @media (max-width: 380px) {
+      .cart-header-btn {
+        padding: 0 14px 0 12px;
+        gap: 6px;
+      }
+
+      .cart-header-btn.has-items {
+        padding-right: 22px;
+      }
+
+      .cart-header-btn-label {
+        font-size: 13px;
+      }
+    }
+
+    @media (max-width: 767px) {
+      .header-right {
+        gap: 8px;
+      }
+
+      .header-messengers a,
+      .nav-toggle {
+        width: 42px;
+        height: 42px;
+      }
+    }
+
+    /* Product price + actions */
+    .product-price {
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin: 0 0 12px;
+      letter-spacing: -0.02em;
+    }
+
+    .product-price small {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--muted);
+    }
+
+    .product-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .btn-cart {
+      background: var(--accent);
+      color: var(--on-accent);
+      border-color: var(--accent-hover);
+    }
+
+    .btn-cart:hover,
+    .btn-cart:focus-visible {
+      background: var(--btn-hover-bg);
+      border-color: var(--btn-hover-bg);
+      color: var(--btn-hover-text);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      border: 1px dashed var(--border);
+    }
+
+    .btn-ghost:hover,
+    .btn-ghost:focus-visible {
+      background: var(--btn-hover-bg);
+      border-color: var(--btn-hover-bg);
+      color: var(--btn-hover-text);
+    }
+
+    .rec-price {
+      font-weight: 700;
+      margin: 0 0 10px;
+      font-size: 1.1rem;
+    }
+
+    /* Cart drawer */
+    .cart-drawer-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.4);
+      z-index: 170;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.25s, visibility 0.25s;
+    }
+
+    .cart-drawer-backdrop.is-open {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .cart-drawer-backdrop:not(.is-open) {
+      pointer-events: none;
+    }
+
+    .cart-drawer {
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: 100%;
+      max-width: 420px;
+      height: 100%;
+      max-height: 100dvh;
+      padding-top: env(safe-area-inset-top, 0px);
+      padding-bottom: env(safe-area-inset-bottom, 0px);
+      background: var(--bg);
+      z-index: 180;
+      box-shadow: -8px 0 32px rgba(0, 0, 0, 0.12);
+      display: flex;
+      flex-direction: column;
+      transform: translateX(100%);
+      transition: transform 0.28s ease;
+      box-sizing: border-box;
+    }
+
+    .cart-drawer.is-open {
+      transform: translateX(0);
+    }
+
+    .cart-drawer-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px max(18px, env(safe-area-inset-right, 0px)) 16px max(18px, env(safe-area-inset-left, 0px));
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+
+    .cart-drawer-header h2 {
+      margin: 0;
+      font-size: 1.15rem;
+    }
+
+    .cart-drawer-close {
+      width: 40px;
+      height: 40px;
+      border: none;
+      border-radius: 10px;
+      background: var(--btn-bg);
+      cursor: pointer;
+      font-size: 20px;
+      line-height: 1;
+    }
+
+    .cart-drawer-close:hover,
+    .cart-drawer-close:focus-visible {
+      background: var(--btn-hover-bg);
+      color: var(--btn-hover-text);
+    }
+
+    .cart-drawer-body {
+      flex: 1;
+      min-height: 0;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior: contain;
+      padding: 12px 18px;
+      padding-left: max(18px, env(safe-area-inset-left, 0px));
+    }
+
+    .cart-empty {
+      text-align: center;
+      color: var(--muted);
+      padding: 40px 16px;
+      font-size: 15px;
+    }
+
+    .cart-line {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 8px 12px;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .cart-line-title {
+      font-weight: 600;
+      font-size: 14px;
+      line-height: 1.35;
+      margin: 0;
+    }
+
+    .cart-line-meta {
+      font-size: 12px;
+      color: var(--muted);
+      margin: 4px 0 0;
+    }
+
+    .cart-line-price {
+      font-weight: 700;
+      font-size: 14px;
+      text-align: right;
+      align-self: start;
+    }
+
+    .cart-line-controls {
+      grid-column: 1 / -1;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .qty-btn {
+      width: 36px;
+      height: 36px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: #fafafa;
+      cursor: pointer;
+      font-size: 18px;
+      line-height: 1;
+    }
+
+    .qty-btn:hover {
+      background: var(--btn-bg);
+    }
+
+    .qty-val {
+      min-width: 28px;
+      text-align: center;
+      font-weight: 600;
+    }
+
+    .cart-line-remove {
+      margin-left: auto;
+      padding: 8px 12px;
+      font-size: 13px;
+      border: none;
+      background: none;
+      color: var(--muted);
+      cursor: pointer;
+      text-decoration: underline;
+    }
+
+    .cart-line-remove:hover {
+      color: var(--accent);
+    }
+
+    .cart-drawer-footer {
+      padding: 16px 18px max(20px, env(safe-area-inset-bottom, 0px));
+      padding-left: max(18px, env(safe-area-inset-left, 0px));
+      padding-right: max(18px, env(safe-area-inset-right, 0px));
+      border-top: 1px solid var(--border);
+      flex-shrink: 0;
+      background: #fafafa;
+    }
+
+    /* Плавающая корзина (мобильные) — та же панель, PDF/Excel */
+    .cart-fab {
+      display: none;
+      position: fixed;
+      z-index: 165;
+      right: max(16px, env(safe-area-inset-right, 0px));
+      bottom: max(16px, env(safe-area-inset-bottom, 0px));
+      width: 56px;
+      height: 56px;
+      border: none;
+      border-radius: 50%;
+      background: var(--accent);
+      color: var(--on-accent);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+      cursor: pointer;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      transition: transform 0.2s, background 0.2s;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .cart-fab:active {
+      transform: scale(0.96);
+    }
+
+    .cart-fab .cart-badge {
+      position: absolute;
+      top: 4px;
+      right: 4px;
+      min-width: 18px;
+      height: 18px;
+      padding: 0 5px;
+      font-size: 11px;
+      font-weight: 700;
+      line-height: 18px;
+      text-align: center;
+      color: var(--accent);
+      background: var(--on-accent);
+      border-radius: 99px;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
+      display: none;
+    }
+
+    .cart-fab.has-items .cart-badge {
+      display: block;
+    }
+
+    @media (max-width: 767px) {
+      .cart-fab {
+        display: inline-flex;
+      }
+    }
+
+    .view-mode-toggle {
+      position: fixed;
+      left: max(12px, env(safe-area-inset-left, 0px));
+      bottom: max(12px, env(safe-area-inset-bottom, 0px));
+      z-index: 160;
+      border: none;
+      border-radius: 999px;
+      padding: 10px 14px;
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--on-accent);
+      background: var(--accent);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+      cursor: pointer;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body.modal-open .view-mode-toggle,
+    body.cart-open .view-mode-toggle,
+    body.catalog-mega-open .view-mode-toggle {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .cart-total-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 14px;
+      font-size: 1.1rem;
+    }
+
+    .cart-total-row strong {
+      font-size: 1.35rem;
+    }
+
+    .cart-export-row {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    @media (min-width: 400px) {
+      .cart-export-row {
+        flex-direction: row;
+      }
+
+      .cart-export-row .btn {
+        flex: 1;
+      }
+    }
+
+    /*
+      WebKit (Safari / Edge на iOS) часто рисует пустой canvas, если узел вне вьюпорта.
+      На время html2pdf показываем макет в оверлее по центру экрана.
+    */
+    .pdf-export-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 2147483647;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: max(16px, env(safe-area-inset-top)) 12px max(24px, env(safe-area-inset-bottom));
+      overflow: auto;
+      -webkit-overflow-scrolling: touch;
+      background: rgba(0, 0, 0, 0.5);
+      box-sizing: border-box;
+    }
+
+    .pdf-export-overlay .pdf-export-hint {
+      flex-shrink: 0;
+      margin: 0 0 12px;
+      padding: 0 8px;
+      font: 500 15px/1.35 Inter, system-ui, sans-serif;
+      color: #fff;
+      text-align: center;
+    }
+
+    .pdf-gen-host {
+      position: relative;
+      width: 100%;
+      max-width: 800px;
+      flex-shrink: 0;
+      box-sizing: border-box;
+      padding: 20px 24px 28px;
+      background: #fff;
+      color: #1a1a1a;
+      font-family: Inter, system-ui, sans-serif;
+      font-size: 11pt;
+      line-height: 1.35;
+      border-radius: 12px;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
+      overflow: visible;
+    }
+
+    .pdf-gen-host h1 {
+      font-size: 16pt;
+      margin: 0 0 12pt;
+    }
+
+    .pdf-gen-host table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 12pt;
+    }
+
+    .pdf-gen-host th,
+    .pdf-gen-host td {
+      border: 1px solid #ccc;
+      padding: 6pt 8pt;
+      text-align: left;
+    }
+
+    .pdf-gen-host th {
+      background: #f5f5f5;
+    }
+
+    .pdf-gen-host .pdf-total {
+      font-weight: 700;
+      font-size: 12pt;
+      margin-top: 8pt;
+    }
+
+    .pdf-gen-host tfoot td {
+      background: #fafafa;
+      font-weight: 700;
+    }
+
+    .pdf-gen-host .pdf-brand-footer {
+      margin-top: 20pt;
+      padding-top: 12pt;
+      border-top: 2px solid #1a1a1a;
+      font-size: 14pt;
+      font-weight: 700;
+      color: #1a1a1a;
+      letter-spacing: 0.02em;
+    }
+
+    .pdf-gen-host .pdf-brand-footer .pdf-brand-accent {
+      color: var(--accent);
+    }
+
+    .pdf-gen-host .pdf-brand-footer .pdf-brand-sub {
+      display: block;
+      margin-top: 4pt;
+      font-size: 9pt;
+      font-weight: 500;
+      color: #666;
+    }
+  </style>
+</head>
+<body class="header-with-mega">
+  <div class="top-bar">
+    <div class="container inner">
+      <div class="contacts">
+        <span>📍 Московская область и прилегающие районы</span>
+        <a href="tel:+79834019144"><i class="fa-solid fa-phone" aria-hidden="true"></i> +7 (983) 401-91-44</a>
+      </div>
+    </div>
+  </div>
+
+  <header class="site-header">
+    <div class="container">
+      <div class="header-toolbar">
+        <a href="#hero" class="logo">Строй<span>Фаст</span></a>
+        <button type="button" class="btn-catalog" id="catalogMegaBtn" aria-expanded="false" aria-haspopup="true" aria-controls="catalogMegaPanel" aria-label="Открыть каталог">
+          <span class="btn-catalog-burger" aria-hidden="true"><i class="fa-solid fa-bars"></i></span>
+          <span class="btn-catalog-x" aria-hidden="true">×</span>
+          Каталог
+        </button>
+        <form class="header-search" id="headerSearchForm" role="search" action="#catalog">
+          <input type="search" id="headerSearchInput" name="q" autocomplete="off" placeholder="Смеси, кабель, сантехника, аренда инструмента…" aria-label="Поиск по каталогу">
+          <button type="submit" class="header-search-btn">Найти</button>
+        </form>
+        <div class="header-right">
+          <div class="header-actions">
+            <button type="button" class="cart-header-btn js-cart-trigger" id="openCartBtn" aria-expanded="false" aria-controls="cartDrawer">
+              <i class="fa-solid fa-cart-shopping" aria-hidden="true"></i>
+              <span class="cart-header-btn-label">Корзина</span>
+              <span class="cart-badge js-cart-badge" id="headerCartBadge">0</span>
+            </button>
+          </div>
+          <div class="header-messengers messengers" aria-label="Мессенджеры">
+            <a href="https://t.me/stroifast" target="_blank" rel="noopener noreferrer" aria-label="Telegram @stroifast" title="@stroifast">
+              <i class="fa-brands fa-telegram"></i>
+            </a>
+            <a href="https://wa.me/79834019144" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">
+              <i class="fa-brands fa-whatsapp"></i>
+            </a>
+            <a href="https://max.ru/?phone=79834019144" target="_blank" rel="noopener noreferrer" aria-label="MAX, номер +7 (983) 401-91-44">
+              <svg class="icon-max" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="19" height="19" aria-hidden="true">
+                <rect width="32" height="32" rx="8" fill="#2B26FD"/>
+                <path fill="#fff" d="M7.5 24V8h4.2l4.3 7.8L20.3 8h4.2v16h-3.6V14.5L17 24h-2.1L11.1 14.5V24H7.5z"/>
+              </svg>
+            </a>
+          </div>
+          <button type="button" class="nav-toggle" id="navToggle" aria-label="Открыть меню" aria-expanded="false">
+            <i class="fa-solid fa-bars"></i>
+          </button>
+        </div>
+      </div>
+      <nav class="nav-desktop header-nav-secondary" aria-label="Основное меню">
+        <a href="#hero">Главная</a>
+        <a href="#catalog">Каталог на сайте</a>
+        <a href="#services">Сервисы</a>
+        <a href="#footer">Контакты</a>
+      </nav>
+      <nav class="nav-mobile" id="navMobile" aria-label="Мобильное меню">
+        <a href="#hero">Главная</a>
+        <a href="#catalog">Каталог на сайте</a>
+        <a href="#services">Сервисы</a>
+        <a href="#footer">Контакты</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="catalog-mega" id="catalogMega" aria-hidden="true">
+    <div class="catalog-mega-backdrop" id="catalogMegaBackdrop"></div>
+    <div class="catalog-mega-panel" id="catalogMegaPanel" role="dialog" aria-modal="true" aria-labelledby="catalogMegaTitle">
+      <div class="container">
+        <div class="catalog-mega-side" id="catalogMegaSide">
+          <span id="catalogMegaTitle" class="visually-hidden">Каталог товаров</span>
+        </div>
+        <div class="catalog-mega-body" id="catalogMegaBody"></div>
+      </div>
+    </div>
+  </div>
+
+  <main id="hero" class="hero">
+    <div class="container">
+      <h1>Всё для ремонта с доставкой</h1>
+      <p>Смеси, сантехника, электрика и расходники — подберём материалы под задачу. Оплата после согласования, без онлайн-списаний.</p>
+      <button type="button" class="btn btn-lg js-open-modal" data-context="Расчёт сметы с героя">
+        Рассчитать смету
+      </button>
+    </div>
+  </main>
+
+  <section id="catalog" class="section catalog-section">
+    <div class="container">
+      <div class="section-head">
+        <h2 class="section-title">Каталог</h2>
+        <div class="filter-row">
+          <span class="filter-label">Сортировка:</span>
+          <select id="sortSelect" class="sort-select" aria-label="Сортировка товаров">
+            <option value="alpha">По алфавиту</option>
+            <option value="new">По новизне</option>
+          </select>
+        </div>
+      </div>
+      <p class="section-lead">Подборка ходовых позиций. Уточним комплектацию и сроки по телефону или в мессенджере.</p>
+
+      <div class="filters">
+        <div class="filter-row">
+          <span class="filter-label">Категория:</span>
+          <div class="chips" id="categoryChips" role="group" aria-label="Фильтр по категории">
+            <button type="button" class="chip is-active" data-category="all">Все</button>
+            <button type="button" class="chip" data-category="mixes">Смеси</button>
+            <button type="button" class="chip" data-category="plumbing">Сантехника</button>
+            <button type="button" class="chip" data-category="electric">Электрика</button>
+            <button type="button" class="chip" data-category="consumables">Расходники</button>
+          </div>
+        </div>
+        <div class="filter-row">
+          <label class="checkbox-inline">
+            <input type="checkbox" id="inStockOnly">
+            Только в наличии
+          </label>
+        </div>
+      </div>
+
+      <div class="catalog-grid" id="catalogGrid" aria-live="polite"></div>
+    </div>
+  </section>
+
+  <section class="section" id="brands">
+    <div class="container">
+      <h2 class="section-title">Наши бренды</h2>
+      <p class="section-lead">Работаем с проверенными производителями — качество и сертификаты по запросу.</p>
+      <div class="brands-grid">
+        <div class="brand-tile">KNAUF</div>
+        <div class="brand-tile">VETONIT UNIS</div>
+        <div class="brand-tile">РУССЕАН</div>
+        <div class="brand-tile">BANOLIT</div>
+        <div class="brand-tile">LITOKOL</div>
+        <div class="brand-tile">DANOGIPS</div>
+        <div class="brand-tile">ВОЛМА</div>
+        <div class="brand-tile">OSCAR</div>
+        <div class="brand-tile">WELLTON</div>
+        <div class="brand-tile">CERESIT</div>
+        <div class="brand-tile">PUFAS</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="calculator">
+    <div class="container">
+      <h2 class="section-title">Доставка и калькулятор</h2>
+      <p class="section-lead">Рассчитайте ориентир по доставке с погрузкой и разгрузкой и по объёму материалов. Точная сумма — после согласования с менеджером.</p>
+
+      <div class="delivery-block" id="deliveryBlock">
+        <div class="delivery-icon" aria-hidden="true"><i class="fa-solid fa-truck-ramp-box"></i></div>
+        <h3>Доставка: погрузка и выгрузка</h3>
+        <p class="delivery-lead"><strong>Зона:</strong> только Московская область и прилегающие районы. Ориентир считается, если пункты А и Б в этих границах. Уточните остановки и разгрузки по маршруту — учтём в заявке.</p>
+        <div class="form-row">
+          <label for="delPointA">Пункт А (забор / погрузка)</label>
+          <input type="text" id="delPointA" name="delPointA" autocomplete="section-address" placeholder="Например: Московская обл., г. Химки, … / Одинцовский район, …">
+        </div>
+        <div class="form-row">
+          <label for="delPointB">Пункт Б (выгрузка)</label>
+          <input type="text" id="delPointB" name="delPointB" autocomplete="section-address" placeholder="Например: МО или прилегающий район — адрес объекта, подъезд">
+        </div>
+        <div class="form-row form-row-inline">
+          <div>
+            <label for="delDistance">Расстояние, км (приблизительно)</label>
+            <input type="number" id="delDistance" min="0" max="2000" value="25" step="1">
+            <p class="form-hint">Если неизвестно — ориентир по картам</p>
+          </div>
+          <div>
+            <label for="delStopsCount">Остановок с разгрузкой по пути</label>
+            <input type="number" id="delStopsCount" min="0" max="50" value="0" step="1">
+            <p class="form-hint">Краткая разгрузка на точке</p>
+          </div>
+        </div>
+        <div class="form-row">
+          <label for="delStopsDetail">Уточнение маршрута: остановки, разгрузки, пожелания</label>
+          <textarea id="delStopsDetail" rows="3" placeholder="Например: остановка на ул. Строителей — вынести 10 мешков в подвал; объезд МКАД…"></textarea>
+        </div>
+        <div class="form-row form-row-inline">
+          <div>
+            <label for="delFloorA">Этаж / подъём погрузки (пункт А)</label>
+            <input type="number" id="delFloorA" min="0" max="50" value="0" step="1">
+          </div>
+          <div>
+            <label for="delFloorB">Этаж / подъём разгрузки (пункт Б)</label>
+            <input type="number" id="delFloorB" min="0" max="50" value="2" step="1">
+          </div>
+        </div>
+        <div class="form-row">
+          <label class="checkbox-inline" style="margin:0;">
+            <input type="checkbox" id="delManualCarry" checked>
+            Нужен ручной занос / нет грузового лифта (добавляется к ориентиру)
+          </label>
+        </div>
+        <button type="button" class="btn" id="delCalcBtn">Рассчитать ориентир доставки</button>
+        <div class="delivery-estimate" id="delEstimate" role="status"></div>
+        <div class="delivery-actions">
+          <button type="button" class="btn btn-cart" id="delAddCartBtn"><i class="fa-solid fa-cart-plus" aria-hidden="true"></i> В корзину</button>
+          <button type="button" class="btn btn-ghost js-open-modal" data-context="Заявка: доставка по маршруту">Заявка менеджеру</button>
+        </div>
+      </div>
+
+      <div class="calc-block">
+        <h3 class="section-title" style="margin-top:0;font-size:1.15rem;">Калькулятор материалов</h3>
+        <p class="section-lead" style="margin-bottom:16px;">Площадь, тип работ и расхоз запас — для ориентира по закупке.</p>
+        <div class="form-row form-row-inline">
+          <div>
+            <label for="calcArea">Площадь, м²</label>
+            <input type="number" id="calcArea" min="1" max="100000" value="30" step="0.1">
+          </div>
+          <div>
+            <label for="calcHeight">Высота потолков, м</label>
+            <input type="number" id="calcHeight" min="2" max="6" value="2.7" step="0.1">
+          </div>
+        </div>
+        <div class="form-row">
+          <label for="calcType">Тип работ</label>
+          <select id="calcType">
+            <option value="screed">Стяжка пола</option>
+            <option value="plaster">Штукатурка / шпаклёвка стен</option>
+            <option value="electric">Электрика (кабель, автоматика)</option>
+            <option value="plumbing">Сантехника (трубы, фитинги)</option>
+            <option value="tile">Плиточные работы (клей, затирка)</option>
+            <option value="paint">Покраска (грунт, краска)</option>
+          </select>
+        </div>
+        <div class="form-row form-row-inline">
+          <div>
+            <label for="calcScreed">Толщина слоя / стяжка, мм</label>
+            <input type="number" id="calcScreed" min="10" max="200" value="50" step="5">
+            <p class="form-hint">Для стяжки; для других типов можно не менять</p>
+          </div>
+          <div>
+            <label for="calcWaste">Запас материала, %</label>
+            <select id="calcWaste">
+              <option value="5">5%</option>
+              <option value="8" selected>8%</option>
+              <option value="10">10%</option>
+              <option value="15">15%</option>
+            </select>
+          </div>
+        </div>
+        <details class="calc-advanced">
+          <summary>Дополнительно для ориентира</summary>
+          <div class="form-row form-row-inline" style="margin-top:12px;">
+            <div>
+              <label for="calcDoors">Количество дверных проёмов</label>
+              <input type="number" id="calcDoors" min="0" max="50" value="2" step="1">
+            </div>
+            <div>
+              <label for="calcWindows">Оконных проёмов</label>
+              <input type="number" id="calcWindows" min="0" max="50" value="4" step="1">
+            </div>
+          </div>
+          <label class="checkbox-inline" style="margin-top:4px;">
+            <input type="checkbox" id="calcPrimer" checked>
+            Заложить грунтовку / совместимые с типом работ составы
+          </label>
+        </details>
+        <button type="button" class="btn" id="calcSubmit">Рассчитать ориентир</button>
+        <div class="calc-result" id="calcResult" role="status"></div>
+        <div class="calc-breakdown" id="calcBreakdown" aria-live="polite"></div>
+        <div class="calc-actions">
+          <button type="button" class="btn js-open-modal" data-context="Заказ по калькулятору материалов">Заказать</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="services" class="section">
+    <div class="container">
+      <h2 class="section-title">Наши сервисы</h2>
+      <p class="section-lead">Как у крупных сетей: удобно подъехать, забрать или получить на объекте.</p>
+      <div class="services-grid">
+        <article class="service-card">
+          <div class="icon" aria-hidden="true"><i class="fa-solid fa-screwdriver-wrench"></i></div>
+          <h3>Аренда инструмента</h3>
+          <p>Перфораторы, шлифмашины, виброплиты — сдаём по суткам, подскажем насадки.</p>
+        </article>
+        <article class="service-card">
+          <div class="icon" aria-hidden="true"><i class="fa-solid fa-user-tie"></i></div>
+          <h3>Помощь профессионала</h3>
+          <p>Консультируем по технологии и расходу материалов, поможем избежать переделок.</p>
+        </article>
+        <article class="service-card">
+          <div class="icon" aria-hidden="true"><i class="fa-solid fa-truck-ramp-box"></i></div>
+          <h3>Доставка и разгрузка</h3>
+          <p>Московская область и прилегающие районы — привезём в удобное окно, поднимем на этаж, условия по договору.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="recommendations">
+    <div class="container">
+      <h2 class="section-title">Вам может понадобиться</h2>
+      <p class="section-lead">Популярные позиции для старта ремонта.</p>
+      <div class="rec-grid" id="recGrid"></div>
+    </div>
+  </section>
+
+  <div class="pre-footer-tagline">
+    <div class="pre-footer-tagline__inner">
+      <p class="pre-footer-tagline__text">Строительный магазин СтройФаст</p>
+    </div>
+  </div>
+
+  <footer class="site-footer" id="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <h3>О компании</h3>
+          <ul>
+            <li><a href="#">О СтройФаст</a></li>
+            <li><a href="#">Вакансии</a></li>
+            <li><a href="#">Новости</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3>Покупателям</h3>
+          <ul>
+            <li><a href="#catalog">Как заказать</a></li>
+            <li><a href="#">Оплата и доставка</a></li>
+            <li><a href="#">Возврат</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3>Сервисы</h3>
+          <ul>
+            <li><a href="#services">Аренда инструмента</a></li>
+            <li><a href="#services">Консультация</a></li>
+            <li><a href="#calculator">Калькулятор</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3>Контакты</h3>
+          <ul>
+            <li><a href="tel:+79834019144">+7 (983) 401-91-44</a></li>
+            <li><span>Московская область и прилегающие районы</span></li>
+            <li>
+              <a href="https://t.me/stroifast" target="_blank" rel="noopener noreferrer" class="footer-max" title="Telegram @stroifast">
+                <i class="fa-brands fa-telegram footer-contact-icon" aria-hidden="true"></i>
+                Telegram · @stroifast
+              </a>
+            </li>
+            <li>
+              <a href="https://wa.me/79834019144" target="_blank" rel="noopener noreferrer" class="footer-max">
+                <i class="fa-brands fa-whatsapp footer-contact-icon" aria-hidden="true"></i>
+                WhatsApp
+              </a>
+            </li>
+            <li>
+              <a href="https://max.ru/?phone=79834019144" target="_blank" rel="noopener noreferrer" class="footer-max" title="Написать в MAX: +7 (983) 401-91-44">
+                <svg class="footer-max-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="16" height="16" aria-hidden="true"><rect width="32" height="32" rx="8" fill="#2B26FD"/><path fill="#fff" d="M7.5 24V8h4.2l4.3 7.8L20.3 8h4.2v16h-3.6V14.5L17 24h-2.1L11.1 14.5V24H7.5z"/></svg>
+                MAX
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        © <span id="year"></span> СтройФаст. Все права защищены.
+      </div>
+    </div>
+  </footer>
+
+  <div class="cart-drawer-backdrop" id="cartBackdrop"></div>
+  <aside class="cart-drawer" id="cartDrawer" role="dialog" aria-modal="true" aria-labelledby="cartDrawerTitle" aria-hidden="true">
+    <div class="cart-drawer-header">
+      <h2 id="cartDrawerTitle">Корзина</h2>
+      <button type="button" class="cart-drawer-close" id="closeCartBtn" aria-label="Закрыть корзину">&times;</button>
+    </div>
+    <div class="cart-drawer-body" id="cartDrawerBody"></div>
+    <div class="cart-drawer-footer" id="cartDrawerFooter">
+      <div class="cart-total-row">
+        <span>Итого</span>
+        <strong id="cartTotalSum">0 ₽</strong>
+      </div>
+      <p style="margin:0 0 10px;font-size:13px;color:var(--muted);">Цены ориентировочные. Итог по счёту после согласования.</p>
+      <div class="cart-export-row">
+        <button type="button" class="btn" id="exportPdfBtn"><i class="fa-solid fa-file-pdf" aria-hidden="true"></i> Скачать PDF</button>
+        <button type="button" class="btn" id="exportExcelBtn"><i class="fa-solid fa-table" aria-hidden="true"></i> Скачать Excel</button>
+      </div>
+      <button type="button" class="btn btn-block" id="cartCheckoutBtn">Оформить заявку</button>
+    </div>
+  </aside>
+
+  <button type="button" class="cart-fab js-cart-trigger" id="openCartFab" aria-label="Открыть корзину" aria-expanded="false" aria-controls="cartDrawer">
+    <i class="fa-solid fa-cart-shopping" aria-hidden="true"></i>
+    <span class="cart-badge js-cart-badge" id="cartFabBadge" aria-hidden="true">0</span>
+  </button>
+
+  <button type="button" class="view-mode-toggle" id="viewModeToggle">Открыть в мобильной версии</button>
+
+  <div class="modal-backdrop" id="modalBackdrop" role="dialog" aria-modal="true" aria-labelledby="modalTitle" hidden>
+    <div class="modal" role="document">
+      <div class="modal-header">
+        <h2 id="modalTitle">Заявка</h2>
+        <button type="button" class="modal-close" id="modalClose" aria-label="Закрыть">&times;</button>
+      </div>
+      <form class="modal-form" id="leadForm">
+        <input type="hidden" name="context" id="leadContext" value="">
+        <input type="text" name="website" id="leadWebsite" class="visually-hidden" tabindex="-1" autocomplete="off" aria-hidden="true">
+        <div class="form-row">
+          <label for="leadName">Имя</label>
+          <input type="text" id="leadName" name="name" required autocomplete="name" placeholder="Как к вам обращаться">
+        </div>
+        <div class="form-row">
+          <label for="leadPhone">Телефон</label>
+          <input type="tel" id="leadPhone" name="phone" required autocomplete="tel" placeholder="+7 (983) 401-91-44">
+        </div>
+        <div class="form-row">
+          <label for="leadComment">Комментарий</label>
+          <textarea id="leadComment" name="comment" placeholder="Объём, адрес, удобное время связи"></textarea>
+        </div>
+        <div class="form-row">
+          <span id="contactLabel" style="display:block;font-weight:600;margin-bottom:8px;">Связаться через</span>
+          <div class="radio-group" role="radiogroup" aria-labelledby="contactLabel">
+            <label><input type="radio" name="contact" value="telegram" checked> Telegram</label>
+            <label><input type="radio" name="contact" value="max"> MAX</label>
+            <label><input type="radio" name="contact" value="call"> Звонок</label>
+          </div>
+        </div>
+        <button type="submit" class="btn btn-block">Отправить</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha384-Yv5O+t3uE3hunW8uyrbpPW3iw6/5/Y7HitWJBLgqfMoA36NogMmy+8wWZMpn3HWc" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js" integrity="sha384-vtjasyidUo0kW94K5MXDXntzOJpQgBKXmE7e2Ga4LG0skTTLeBi97eFAXsqewJjw" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script>
+    (function () {
+      'use strict';
+
+      var CART_STORAGE_KEY = 'stroifast_cart_v2';
+      var DELIVERY_CART_PREFIX = 'p_delivery_';
+
+      var products = [
+        {
+          id: 'p_rotband',
+          brand: 'KNAUF',
+          title: 'Ротбанд 30 кг',
+          desc: 'Гипсовая штукатурка для внутренних работ.',
+          category: 'mixes',
+          stock: 'in',
+          newOrder: 3,
+          price: 591,
+          image: 'images/products/p_rotband.svg'
+        },
+        {
+          id: 'p_vetonit_lr',
+          brand: 'VETONIT UNIS',
+          title: 'LR+ финишная 20 кг',
+          desc: 'Белая финишная шпаклёвка под покраску.',
+          category: 'mixes',
+          stock: 'in',
+          newOrder: 1,
+          price: 829,
+          image: 'images/products/p_vetonit_lr.svg'
+        },
+        {
+          id: 'p_cement500',
+          brand: 'РУССЕАН',
+          title: 'Цемент М500 50 кг',
+          desc: 'Портландцемент для стяжек и кладки.',
+          category: 'mixes',
+          stock: 'in',
+          newOrder: 7,
+          price: 485,
+          image: 'images/products/p_cement500.svg'
+        },
+        {
+          id: 'p_roca_mixer',
+          brand: 'LITOKOL',
+          title: 'Смеситель для раковины',
+          desc: 'Однорычажный, керамический картридж.',
+          category: 'plumbing',
+          stock: 'order',
+          newOrder: 2,
+          price: 3490,
+          image: 'images/products/p_roca_mixer.svg'
+        },
+        {
+          id: 'p_schneider_16',
+          brand: 'DANOGIPS',
+          title: 'Автомат 16А',
+          desc: 'Однополюсный выключатель, характеристика C.',
+          category: 'electric',
+          stock: 'in',
+          newOrder: 4,
+          price: 320,
+          image: 'images/products/p_schneider_16.svg'
+        },
+        {
+          id: 'p_tesa_vvg',
+          brand: 'CERESIT',
+          title: 'Кабель ВВГ 3×1,5',
+          desc: 'Для освещения и бытовых линий.',
+          category: 'electric',
+          stock: 'in',
+          newOrder: 5,
+          price: 1890,
+          image: 'images/products/p_tesa_vvg.svg'
+        },
+        {
+          id: 'p_stanley_spatula',
+          brand: 'PUFAS',
+          title: 'Шпатель 300 мм',
+          desc: 'Нержавеющее полотно, удобная рукоять.',
+          category: 'consumables',
+          stock: 'in',
+          newOrder: 8,
+          price: 390,
+          image: 'images/products/p_stanley_spatula.svg'
+        },
+        {
+          id: 'p_roca_siphon',
+          brand: 'ВОЛМА',
+          title: 'Сифон для ванны',
+          desc: 'С гибкой подводкой и защитой от запаха.',
+          category: 'plumbing',
+          stock: 'order',
+          newOrder: 6,
+          price: 720,
+          image: 'images/products/p_roca_siphon.svg'
+        }
+      ];
+
+      var recIds = [0, 4, 6];
+
+      function formatMoney(n) {
+        return Math.round(n).toLocaleString('ru-RU') + ' ₽';
+      }
+
+      var calcRates = {
+        screed: { min: 850, max: 1400 },
+        plaster: { min: 720, max: 1200 },
+        electric: { min: 380, max: 950 },
+        plumbing: { min: 520, max: 1100 },
+        tile: { min: 890, max: 1500 },
+        paint: { min: 280, max: 550 }
+      };
+
+      var catalogGrid = document.getElementById('catalogGrid');
+      var recGrid = document.getElementById('recGrid');
+      var chips = document.querySelectorAll('#categoryChips .chip');
+      var inStockOnly = document.getElementById('inStockOnly');
+      var sortSelect = document.getElementById('sortSelect');
+      var modalBackdrop = document.getElementById('modalBackdrop');
+      var modalClose = document.getElementById('modalClose');
+      var leadForm = document.getElementById('leadForm');
+      var leadContext = document.getElementById('leadContext');
+      var leadComment = document.getElementById('leadComment');
+      var navToggle = document.getElementById('navToggle');
+      var navMobile = document.getElementById('navMobile');
+
+      var cartDrawer = document.getElementById('cartDrawer');
+      var cartBackdrop = document.getElementById('cartBackdrop');
+      var cartDrawerBody = document.getElementById('cartDrawerBody');
+      var closeCartBtn = document.getElementById('closeCartBtn');
+      var cartTotalSum = document.getElementById('cartTotalSum');
+      var exportPdfBtn = document.getElementById('exportPdfBtn');
+      var exportExcelBtn = document.getElementById('exportExcelBtn');
+      var cartCheckoutBtn = document.getElementById('cartCheckoutBtn');
+      var catalogMega = document.getElementById('catalogMega');
+      var catalogMegaBtn = document.getElementById('catalogMegaBtn');
+      var catalogMegaBackdrop = document.getElementById('catalogMegaBackdrop');
+      var catalogMegaSide = document.getElementById('catalogMegaSide');
+      var catalogMegaBody = document.getElementById('catalogMegaBody');
+      var headerSearchForm = document.getElementById('headerSearchForm');
+      var headerSearchInput = document.getElementById('headerSearchInput');
+      var viewModeToggle = document.getElementById('viewModeToggle');
+
+      var headerSearchQuery = '';
+
+      function isMobileViewportNow() {
+        return window.matchMedia('(max-width: 767px)').matches;
+      }
+
+      function isForcedDesktopOnMobile() {
+        try {
+          return localStorage.getItem('stroifast_force_desktop_mobile') === '1';
+        } catch (e) {
+          return false;
+        }
+      }
+
+      function updateViewModeToggleLabel() {
+        if (!viewModeToggle) return;
+        if (isMobileViewportNow()) {
+          viewModeToggle.textContent = isForcedDesktopOnMobile()
+            ? 'Открыть мобильную версию'
+            : 'Открыть полную версию сайта';
+        } else {
+          viewModeToggle.textContent = 'Открыть в мобильной версии';
+        }
+      }
+
+      function bindViewModeToggle() {
+        if (!viewModeToggle) return;
+        bindTap(viewModeToggle, function () {
+          if (isMobileViewportNow()) {
+            var nextDesktop = !isForcedDesktopOnMobile();
+            try {
+              localStorage.setItem('stroifast_force_desktop_mobile', nextDesktop ? '1' : '0');
+            } catch (e) {}
+            window.location.reload();
+            return;
+          }
+          var w = window.open(window.location.href, 'stroifast-mobile-preview', 'width=430,height=900,menubar=no,toolbar=no,location=yes,resizable=yes,scrollbars=yes,status=no');
+          if (!w) {
+            alert('Браузер заблокировал новое окно. Разрешите всплывающие окна для предпросмотра мобильной версии.');
+          }
+        });
+      }
+
+      var MEGA_CATALOG_ROOT = [
+        {
+          id: 'materials',
+          label: 'Стройматериалы',
+          icon: 'fa-cubes',
+          cols: [
+            {
+              title: 'Сухие строительные смеси',
+              items: [
+                { label: 'Штукатурки', count: 81, category: 'mixes' },
+                { label: 'Шпаклёвки и грунты', count: 64, category: 'mixes' },
+                { label: 'Наливные полы', count: 42, category: 'mixes' },
+                { label: 'Клеи плиточные', count: 118, category: 'mixes' },
+                { label: 'Стяжки и ровнители', count: 56, category: 'mixes' }
+              ]
+            },
+            {
+              title: 'Листовые материалы',
+              items: [
+                { label: 'Гипсокартон и профиль', count: 95, category: 'mixes' },
+                { label: 'Фанера и OSB', count: 30, category: 'consumables' },
+                { label: 'Цемент и сухие смеси', count: 48, category: 'mixes' }
+              ]
+            },
+            {
+              title: 'Кровля и изоляция',
+              items: [
+                { label: 'Тепло- и гидроизоляция', count: 73, category: 'all' },
+                { label: 'Кровельные системы', count: 51, category: 'all' }
+              ]
+            },
+            {
+              title: 'Пиломатериалы',
+              items: [
+                { label: 'Брус и доска', count: 36, category: 'all' },
+                { label: 'Погонаж', count: 22, category: 'all' }
+              ]
+            }
+          ]
+        },
+        {
+          id: 'tools',
+          label: 'Инструмент',
+          icon: 'fa-screwdriver-wrench',
+          cols: [
+            {
+              title: 'Ручной инструмент',
+              items: [
+                { label: 'Шпатели и гладилки', count: 54, category: 'consumables' },
+                { label: 'Режущий инструмент', count: 89, category: 'consumables' },
+                { label: 'Измерительный инструмент', count: 41, category: 'consumables' }
+              ]
+            },
+            {
+              title: 'Электроинструмент',
+              items: [
+                { label: 'Дрели и шуруповёрты', count: 67, category: 'consumables' },
+                { label: 'Перфораторы', count: 29, category: 'consumables' }
+              ]
+            },
+            {
+              title: 'Расходники',
+              items: [
+                { label: 'Сверла и буры', count: 102, category: 'consumables' },
+                { label: 'Диски отрезные', count: 76, category: 'consumables' }
+              ]
+            },
+            {
+              title: 'Оборудование',
+              items: [
+                { label: 'Плиткорезы', count: 18, category: 'all' },
+                { label: 'Строительные пылесосы', count: 24, category: 'all' }
+              ]
+            }
+          ]
+        },
+        {
+          id: 'electric',
+          label: 'Электрика',
+          icon: 'fa-bolt',
+          cols: [
+            {
+              title: 'Автоматика и учёт',
+              items: [
+                { label: 'Автоматы и УЗО', count: 142, category: 'electric' },
+                { label: 'Щиты и DIN-рейка', count: 58, category: 'electric' }
+              ]
+            },
+            {
+              title: 'Кабель и провод',
+              items: [
+                { label: 'Кабели ВВГ, NYM', count: 211, category: 'electric' },
+                { label: 'Кабель-каналы и гофра', count: 64, category: 'electric' }
+              ]
+            },
+            {
+              title: 'Розетки и выключатели',
+              items: [
+                { label: 'Внутренние серии', count: 178, category: 'electric' },
+                { label: 'Коробки и подрозетники', count: 93, category: 'electric' }
+              ]
+            },
+            {
+              title: 'Светотехника',
+              items: [
+                { label: 'Светильники', count: 96, category: 'electric' },
+                { label: 'Лампы и комплектующие', count: 121, category: 'electric' }
+              ]
+            }
+          ]
+        },
+        {
+          id: 'engineering',
+          label: 'Инженерные системы',
+          icon: 'fa-faucet-drip',
+          cols: [
+            {
+              title: 'Водоснабжение',
+              items: [
+                { label: 'Трубы ПП и фитинги', count: 134, category: 'plumbing' },
+                { label: 'Фильтры и комплектующие', count: 47, category: 'plumbing' }
+              ]
+            },
+            {
+              title: 'Отопление',
+              items: [
+                { label: 'Радиаторы', count: 61, category: 'plumbing' },
+                { label: 'Коллекторы и арматура', count: 33, category: 'plumbing' }
+              ]
+            },
+            {
+              title: 'Канализация',
+              items: [
+                { label: 'Трубы и шумоизоляция', count: 52, category: 'plumbing' }
+              ]
+            },
+            {
+              title: 'Вентиляция',
+              items: [
+                { label: 'Решётки и воздуховоды', count: 39, category: 'all' }
+              ]
+            }
+          ]
+        },
+        {
+          id: 'finishing',
+          label: 'Финишная отделка',
+          icon: 'fa-paint-roller',
+          cols: [
+            {
+              title: 'Лакокрасочные материалы',
+              items: [
+                { label: 'Краски интерьерные', count: 88, category: 'mixes' },
+                { label: 'Лаки и эмали', count: 51, category: 'mixes' }
+              ]
+            },
+            {
+              title: 'Обои',
+              items: [
+                { label: 'Винил, флизелин', count: 120, category: 'all' },
+                { label: 'Клеи для обоев', count: 34, category: 'mixes' }
+              ]
+            },
+            {
+              title: 'Плитка',
+              items: [
+                { label: 'Керамогранит', count: 215, category: 'all' },
+                { label: 'Затирки и КПС', count: 67, category: 'consumables' }
+              ]
+            },
+            {
+              title: 'Напольные покрытия',
+              items: [
+                { label: 'Ламинат и линолеум', count: 142, category: 'all' }
+              ]
+            }
+          ]
+        },
+        {
+          id: 'plumbing',
+          label: 'Сантехника',
+          icon: 'fa-bath',
+          cols: [
+            {
+              title: 'Смесители',
+              items: [
+                { label: 'Для раковины и кухни', count: 167, category: 'plumbing' },
+                { label: 'Для ванны и душа', count: 94, category: 'plumbing' }
+              ]
+            },
+            {
+              title: 'Мебель и керамика',
+              items: [
+                { label: 'Унитазы и инсталляции', count: 81, category: 'plumbing' },
+                { label: 'Раковины и поддоны', count: 102, category: 'plumbing' }
+              ]
+            },
+            {
+              title: 'Комплектующие',
+              items: [
+                { label: 'Сифоны и гибкая подводка', count: 59, category: 'plumbing' }
+              ]
+            },
+            {
+              title: 'Водонагреватели',
+              items: [
+                { label: 'Бойлеры и проточные', count: 36, category: 'plumbing' }
+              ]
+            }
+          ]
+        },
+        {
+          id: 'fasteners',
+          label: 'Крепёж',
+          icon: 'fa-anchor',
+          cols: [
+            {
+              title: 'Метизы',
+              items: [
+                { label: 'Саморезы и шурупы', count: 241, category: 'consumables' },
+                { label: 'Анкеры и дюбели', count: 88, category: 'consumables' }
+              ]
+            },
+            {
+              title: 'Такелаж',
+              items: [
+                { label: 'Тросы и стропы', count: 34, category: 'consumables' }
+              ]
+            },
+            {
+              title: 'Перфорация',
+              items: [
+                { label: 'Уголки и профили', count: 52, category: 'consumables' }
+              ]
+            },
+            {
+              title: 'Крепёжная химия',
+              items: [
+                { label: 'Жидкие гвозди, пена', count: 76, category: 'mixes' }
+              ]
+            }
+          ]
+        }
+      ];
+
+      var MEGA_CATALOG_FOOTER = [
+        { label: 'Аренда инструмента', icon: 'fa-clock', href: '#services' },
+        { label: 'Новинки', icon: 'fa-tag', href: '#catalog', sortNew: true }
+      ];
+
+      function isCatalogMegaOpen() {
+        return catalogMega && catalogMega.classList.contains('is-open');
+      }
+
+      function positionCatalogMega() {
+        if (!catalogMega) return;
+        var header = document.querySelector('.site-header');
+        var rect = header ? header.getBoundingClientRect() : { bottom: 64 };
+        var y = Math.max(0, Math.round(rect.bottom));
+        catalogMega.style.setProperty('--mega-top', y + 'px');
+      }
+
+      function closeCatalogMega() {
+        if (!catalogMega) return;
+        catalogMega.classList.remove('is-open');
+        catalogMega.setAttribute('aria-hidden', 'true');
+        if (catalogMegaBtn) {
+          catalogMegaBtn.classList.remove('is-open');
+          catalogMegaBtn.setAttribute('aria-expanded', 'false');
+        }
+        document.body.classList.remove('catalog-mega-open');
+      }
+
+      function openCatalogMega() {
+        if (!catalogMega) return;
+        if (navMobile) navMobile.classList.remove('is-open');
+        if (navToggle) navToggle.setAttribute('aria-expanded', 'false');
+        positionCatalogMega();
+        catalogMega.classList.add('is-open');
+        catalogMega.setAttribute('aria-hidden', 'false');
+        if (catalogMegaBtn) {
+          catalogMegaBtn.classList.add('is-open');
+          catalogMegaBtn.setAttribute('aria-expanded', 'true');
+        }
+        document.body.classList.add('catalog-mega-open');
+      }
+
+      function toggleCatalogMega() {
+        if (isCatalogMegaOpen()) closeCatalogMega();
+        else openCatalogMega();
+      }
+
+      function renderMegaBody(rootId) {
+        if (!catalogMegaBody) return;
+        var cat = null;
+        for (var i = 0; i < MEGA_CATALOG_ROOT.length; i++) {
+          if (MEGA_CATALOG_ROOT[i].id === rootId) {
+            cat = MEGA_CATALOG_ROOT[i];
+            break;
+          }
+        }
+        if (!cat) return;
+        var html = '<div class="catalog-mega-grid">';
+        for (var c = 0; c < cat.cols.length; c++) {
+          var col = cat.cols[c];
+          html += '<div class="mega-col"><h3 class="mega-col-title">' + esc(col.title) + '</h3><ul class="mega-link-list">';
+          for (var j = 0; j < col.items.length; j++) {
+            var it = col.items[j];
+            html +=
+              '<li><button type="button" class="mega-link js-mega-pick" data-category="' +
+              esc(it.category) +
+              '"><span>' +
+              esc(it.label) +
+              '</span><span class="mega-link-count">' +
+              it.count +
+              '</span></button></li>';
+          }
+          html += '</ul></div>';
+        }
+        html += '</div>';
+        catalogMegaBody.innerHTML = html;
+        catalogMegaBody.querySelectorAll('.js-mega-pick').forEach(function (btn) {
+          btn.addEventListener('click', function () {
+            var catFilter = btn.getAttribute('data-category');
+            closeCatalogMega();
+            scrollToCatalogAndFilter(catFilter, false);
+          });
+        });
+      }
+
+      function initMegaCatalog() {
+        if (!catalogMegaSide) return;
+        var sb = '';
+        for (var i = 0; i < MEGA_CATALOG_ROOT.length; i++) {
+          var c = MEGA_CATALOG_ROOT[i];
+          sb +=
+            '<button type="button" class="catalog-mega-side-item' +
+            (i === 0 ? ' is-active' : '') +
+            '" data-mega-root="' +
+            esc(c.id) +
+            '"><i class="fa-solid ' +
+            esc(c.icon) +
+            '" aria-hidden="true"></i><span>' +
+            esc(c.label) +
+            '</span></button>';
+        }
+        sb += '<div class="catalog-mega-divider" role="separator"></div><div class="catalog-mega-side-foot">';
+        for (var f = 0; f < MEGA_CATALOG_FOOTER.length; f++) {
+          var F = MEGA_CATALOG_FOOTER[f];
+          var extra = F.sortNew ? ' data-sort-new="1"' : '';
+          sb +=
+            '<a href="' +
+            esc(F.href) +
+            '" class="js-mega-foot"' +
+            extra +
+            '><i class="fa-solid ' +
+            esc(F.icon) +
+            '" aria-hidden="true"></i>' +
+            esc(F.label) +
+            '</a>';
+        }
+        sb += '</div>';
+        catalogMegaSide.innerHTML = sb;
+        renderMegaBody(MEGA_CATALOG_ROOT[0].id);
+
+        function activateMegaSideItem(btn) {
+          catalogMegaSide.querySelectorAll('.catalog-mega-side-item').forEach(function (b) {
+            b.classList.remove('is-active');
+          });
+          btn.classList.add('is-active');
+          renderMegaBody(btn.getAttribute('data-mega-root'));
+        }
+
+        var megaHoverOk =
+          typeof window.matchMedia === 'function' && window.matchMedia('(hover: hover)').matches;
+
+        catalogMegaSide.querySelectorAll('.catalog-mega-side-item').forEach(function (btn) {
+          btn.addEventListener('click', function () {
+            activateMegaSideItem(btn);
+          });
+          if (megaHoverOk) {
+            btn.addEventListener('mouseenter', function () {
+              activateMegaSideItem(btn);
+            });
+          }
+        });
+
+        catalogMegaSide.querySelectorAll('.js-mega-foot').forEach(function (a) {
+          a.addEventListener('click', function (e) {
+            if (a.getAttribute('data-sort-new')) {
+              e.preventDefault();
+              closeCatalogMega();
+              scrollToCatalogAndFilter('all', true);
+              return;
+            }
+            closeCatalogMega();
+          });
+        });
+      }
+
+      function scrollToCatalogAndFilter(catFilter, sortNew) {
+        headerSearchQuery = '';
+        if (headerSearchInput) headerSearchInput.value = '';
+        var catalogEl = document.getElementById('catalog');
+        if (catalogEl) catalogEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+        if (sortNew) {
+          sortSelect.value = 'new';
+          renderCatalog('new');
+        }
+
+        if (catFilter === 'all') {
+          chips.forEach(function (c) {
+            c.classList.toggle('is-active', c.getAttribute('data-category') === 'all');
+          });
+        } else {
+          chips.forEach(function (c) {
+            c.classList.toggle('is-active', c.getAttribute('data-category') === catFilter);
+          });
+        }
+        applyFilters();
+      }
+
+      function getProductById(id) {
+        for (var i = 0; i < products.length; i++) {
+          if (products[i].id === id) return products[i];
+        }
+        return null;
+      }
+
+      function loadCart() {
+        try {
+          var raw = localStorage.getItem(CART_STORAGE_KEY);
+          if (!raw) {
+            var legacy = localStorage.getItem('stroifast_cart_v1');
+            if (legacy) {
+              localStorage.setItem(CART_STORAGE_KEY, legacy);
+              raw = legacy;
+            }
+          }
+          if (!raw) return {};
+          var o = JSON.parse(raw);
+          if (typeof o !== 'object' || o === null || Array.isArray(o)) return {};
+          return o;
+        } catch (err) {
+          return {};
+        }
+      }
+
+      function saveCart(obj) {
+        localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(obj));
+      }
+
+      function getCartLines() {
+        var cart = loadCart();
+        var lines = [];
+        for (var id in cart) {
+          if (!Object.prototype.hasOwnProperty.call(cart, id)) continue;
+          var entry = cart[id];
+          if (entry && typeof entry === 'object' && entry.custom && entry.qty) {
+            var cq = parseInt(entry.qty, 10);
+            if (!cq || cq < 1) continue;
+            var c = entry.custom;
+            var unit = parseFloat(c.price, 10);
+            if (isNaN(unit)) unit = 0;
+            lines.push({
+              id: id,
+              product: { brand: c.brand, title: c.title, price: unit, desc: c.details || '' },
+              qty: cq,
+              lineSum: Math.round(unit * cq),
+              isCustom: true
+            });
+            continue;
+          }
+          var qty = parseInt(entry, 10);
+          if (!qty || qty < 1) continue;
+          var p = getProductById(id);
+          if (!p) continue;
+          lines.push({
+            id: id,
+            product: p,
+            qty: qty,
+            lineSum: p.price * qty,
+            isCustom: false
+          });
+        }
+        lines.sort(function (a, b) {
+          if (a.isCustom !== b.isCustom) return a.isCustom ? 1 : -1;
+          return (a.product.brand + a.product.title).localeCompare(b.product.brand + b.product.title, 'ru');
+        });
+        return lines;
+      }
+
+      function getCartTotalSum(lines) {
+        var s = 0;
+        for (var i = 0; i < lines.length; i++) s += lines[i].lineSum;
+        return s;
+      }
+
+      function syncCartChrome(totalQty) {
+        var txt = totalQty > 99 ? '99+' : String(totalQty);
+        document.querySelectorAll('.js-cart-badge').forEach(function (el) {
+          el.textContent = txt;
+          el.setAttribute('aria-hidden', totalQty === 0 ? 'true' : 'false');
+        });
+        document.querySelectorAll('.js-cart-trigger').forEach(function (el) {
+          el.classList.toggle('has-items', totalQty > 0);
+        });
+      }
+
+      function setCartExpanded(isOpen) {
+        document.querySelectorAll('.js-cart-trigger').forEach(function (el) {
+          el.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+        });
+      }
+
+      function renderCartDrawer() {
+        var lines = getCartLines();
+        var totalQty = 0;
+        for (var i = 0; i < lines.length; i++) totalQty += lines[i].qty;
+        var total = getCartTotalSum(lines);
+        cartTotalSum.textContent = formatMoney(total);
+        syncCartChrome(totalQty);
+
+        var empty = lines.length === 0;
+        exportPdfBtn.disabled = empty;
+        exportExcelBtn.disabled = empty;
+        cartCheckoutBtn.disabled = empty;
+
+        if (empty) {
+          cartDrawerBody.innerHTML = '<div class="cart-empty">Корзина пока пустая.<br>Добавьте товары из каталога, доставку или блока «Вам может понадобиться».</div>';
+          return;
+        }
+
+        cartDrawerBody.innerHTML = lines.map(function (L) {
+          var meta = esc(L.product.brand) + ' · ' + formatMoney(L.product.price);
+          if (L.isCustom && L.product.desc) {
+            var short = L.product.desc.length > 120 ? L.product.desc.slice(0, 117) + '…' : L.product.desc;
+            meta += '<br><span style="font-weight:400;color:#666">' + esc(short) + '</span>';
+          } else {
+            meta += ' × ' + L.qty;
+          }
+          var controls = L.isCustom
+            ? '<div class="cart-line-controls">' +
+              '<span class="qty-val" style="margin-right:auto">1 услуга</span>' +
+              '<button type="button" class="cart-line-remove js-cart-remove" data-product-id="' + esc(L.id) + '">Удалить</button>' +
+              '</div>'
+            : '<div class="cart-line-controls">' +
+              '<button type="button" class="qty-btn js-qty-dec" data-product-id="' + esc(L.id) + '" aria-label="Уменьшить">−</button>' +
+              '<span class="qty-val">' + L.qty + '</span>' +
+              '<button type="button" class="qty-btn js-qty-inc" data-product-id="' + esc(L.id) + '" aria-label="Добавить">+</button>' +
+              '<button type="button" class="cart-line-remove js-cart-remove" data-product-id="' + esc(L.id) + '">Удалить</button>' +
+              '</div>';
+          return (
+            '<div class="cart-line' + (L.isCustom ? ' cart-line--custom' : '') + '" data-product-id="' + esc(L.id) + '">' +
+              '<div>' +
+                '<p class="cart-line-title">' + esc(L.product.title) + '</p>' +
+                '<p class="cart-line-meta">' + meta + '</p>' +
+              '</div>' +
+              '<div class="cart-line-price">' + formatMoney(L.lineSum) + '</div>' +
+              controls +
+            '</div>'
+          );
+        }).join('');
+      }
+
+      function addToCart(productId, delta) {
+        var cart = loadCart();
+        var entry = cart[productId];
+        if (entry && typeof entry === 'object' && entry.custom) {
+          if (delta < 0) delete cart[productId];
+          saveCart(cart);
+          renderCartDrawer();
+          return;
+        }
+        var p = getProductById(productId);
+        if (!p) return;
+        var q = parseInt(cart[productId], 10) || 0;
+        q += delta;
+        if (q < 1) delete cart[productId];
+        else cart[productId] = q;
+        saveCart(cart);
+        renderCartDrawer();
+      }
+
+      function isDeliveryAddressInZone(addr) {
+        var t = (addr || '')
+          .toLowerCase()
+          .replace(/ё/g, 'е')
+          .trim();
+        if (!t) return false;
+        if (/московск/.test(t) && (/област/.test(t) || /\bобл/.test(t))) return true;
+        if (/подмосков/.test(t)) return true;
+        if (/\bмо\b/.test(t) && (/област/.test(t) || /московск/.test(t) || /\bобл/.test(t))) return true;
+        if (/\bрайон\b/.test(t) || /\bр-?н\b/.test(t)) return true;
+        return false;
+      }
+
+      function computeDeliveryEstimate() {
+        var pointA = (document.getElementById('delPointA').value || '').trim();
+        var pointB = (document.getElementById('delPointB').value || '').trim();
+        var km = parseFloat(document.getElementById('delDistance').value, 10) || 0;
+        var stops = parseInt(document.getElementById('delStopsCount').value, 10) || 0;
+        var detail = (document.getElementById('delStopsDetail').value || '').trim();
+        var fa = parseInt(document.getElementById('delFloorA').value, 10) || 0;
+        var fb = parseInt(document.getElementById('delFloorB').value, 10) || 0;
+        var manual = document.getElementById('delManualCarry').checked;
+        if (!pointA || !pointB) return { ok: false, msg: 'Укажите пункт А и пункт Б.' };
+        if (!isDeliveryAddressInZone(pointA) || !isDeliveryAddressInZone(pointB)) {
+          return {
+            ok: false,
+            msg: 'Ориентир доставки считается только для Московской области и прилегающих районов. В обоих пунктах укажите понятный адрес в этой зоне (например: «Московская обл., …», «Одинцовский район, …»).'
+          };
+        }
+
+        var base = 2600;
+        var perKm = 62;
+        var perStop = 720;
+        var perFloor = manual ? 520 : 200;
+        var manualExtra = manual ? 1400 : 0;
+        var price = base + km * perKm + stops * perStop + (fa + fb) * perFloor + manualExtra;
+        var minP = 3600;
+        if (price < minP) price = minP;
+        price = Math.round(price / 50) * 50;
+
+        var detailLines = [
+          'А: ' + pointA,
+          'Б: ' + pointB,
+          '≈ ' + km + ' км, остановок с разгрузкой: ' + stops,
+          'Этажи: А — ' + fa + ', Б — ' + fb + (manual ? ', ручной занос' : ', подъём упрощённо')
+        ];
+        if (detail) detailLines.push('Маршрут / остановки: ' + detail);
+
+        return {
+          ok: true,
+          price: price,
+          msg: 'Ориентир стоимости доставки с погрузкой и выгрузкой: ' + formatMoney(price) + '. Итог по договору.',
+          details: detailLines.join('\n')
+        };
+      }
+
+      function addDeliveryLineToCart() {
+        var res = computeDeliveryEstimate();
+        if (!res.ok) {
+          alert(res.msg);
+          return;
+        }
+        var cartId = DELIVERY_CART_PREFIX + Date.now();
+        var cart = loadCart();
+        cart[cartId] = {
+          qty: 1,
+          custom: {
+            brand: 'Услуга',
+            title: 'Доставка: погрузка / разгрузка (А → Б)',
+            price: res.price,
+            details: res.details
+          }
+        };
+        saveCart(cart);
+        renderCartDrawer();
+        openCart();
+      }
+
+      function clearCartLine(productId) {
+        var cart = loadCart();
+        delete cart[productId];
+        saveCart(cart);
+        renderCartDrawer();
+      }
+
+      function openCart() {
+        closeCatalogMega();
+        cartBackdrop.classList.add('is-open');
+        cartDrawer.classList.add('is-open');
+        cartDrawer.setAttribute('aria-hidden', 'false');
+        setCartExpanded(true);
+        document.body.classList.add('cart-open');
+        renderCartDrawer();
+      }
+
+      function closeCart() {
+        cartBackdrop.classList.remove('is-open');
+        cartDrawer.classList.remove('is-open');
+        cartDrawer.setAttribute('aria-hidden', 'true');
+        setCartExpanded(false);
+        document.body.classList.remove('cart-open');
+      }
+
+      function getCartSummaryForLead() {
+        var lines = getCartLines();
+        if (!lines.length) return 'Корзина пуста';
+        var s = '';
+        for (var i = 0; i < lines.length; i++) {
+          var L = lines[i];
+          s += '— ' + L.product.brand + ' ' + L.product.title + ' × ' + L.qty + ' → ' + formatMoney(L.lineSum) + '\n';
+          if (L.isCustom && L.product.desc) s += '   ' + L.product.desc.replace(/\n/g, '\n   ') + '\n';
+        }
+        s += 'Итого: ' + formatMoney(getCartTotalSum(lines));
+        return s;
+      }
+
+      function getCartExportFileBasename() {
+        var d = new Date();
+        var p = function (n) { return n < 10 ? '0' + n : String(n); };
+        return 'stroifast-korzina_' + d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate());
+      }
+
+      function formatReceiptDateRu(d) {
+        var months = [
+          'января', 'февраля', 'марта', 'апреля', 'мая', 'июня',
+          'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'
+        ];
+        var day = d.getDate();
+        var pad = day < 10 ? '0' + day : String(day);
+        return pad + ' ' + months[d.getMonth()] + ' ' + d.getFullYear() + ' г.';
+      }
+
+      function formatExcelReceiptSum(n) {
+        var r = Math.round(Math.abs(Number(n)));
+        var s = String(r).replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+        return s + ',00';
+      }
+
+      function rubleWordForm(n) {
+        n = Math.abs(Math.floor(n)) % 100;
+        var n1 = n % 10;
+        if (n >= 11 && n <= 14) return 'рублей';
+        if (n1 === 1) return 'рубль';
+        if (n1 >= 2 && n1 <= 4) return 'рубля';
+        return 'рублей';
+      }
+
+      function itemsWordForm(n) {
+        n = Math.abs(Math.floor(n)) % 100;
+        var n1 = n % 10;
+        if (n >= 11 && n <= 14) return 'наименований';
+        if (n1 === 1) return 'наименование';
+        if (n1 >= 2 && n1 <= 4) return 'наименования';
+        return 'наименований';
+      }
+
+      function capitalizeFirstRu(s) {
+        if (!s) return s;
+        return s.charAt(0).toUpperCase() + s.slice(1);
+      }
+
+      function intToWordsRub(n) {
+        var hundreds = ['', 'сто', 'двести', 'триста', 'четыреста', 'пятьсот', 'шестьсот', 'семьсот', 'восемьсот', 'девятьсот'];
+        var tens = ['', '', 'двадцать', 'тридцать', 'сорок', 'пятьдесят', 'шестьдесят', 'семьдесят', 'восемьдесят', 'девяносто'];
+        var unitsM = ['', 'один', 'два', 'три', 'четыре', 'пять', 'шесть', 'семь', 'восемь', 'девять'];
+        var unitsF = ['', 'одна', 'две', 'три', 'четыре', 'пять', 'шесть', 'семь', 'восемь', 'девять'];
+        var teens = ['десять', 'одиннадцать', 'двенадцать', 'тринадцать', 'четырнадцать', 'пятнадцать', 'шестнадцать', 'семнадцать', 'восемнадцать', 'девятнадцать'];
+
+        function chunk999(x, feminine) {
+          var u = feminine ? unitsF : unitsM;
+          var h = Math.floor(x / 100);
+          var t = Math.floor((x % 100) / 10);
+          var o = x % 10;
+          var bits = [];
+          if (h) bits.push(hundreds[h]);
+          if (t === 1) bits.push(teens[o]);
+          else {
+            if (t) bits.push(tens[t]);
+            if (o) bits.push(u[o]);
+          }
+          return bits.join(' ');
+        }
+
+        function triadName(cnt, one, few, many) {
+          var n10 = cnt % 100;
+          var n1 = cnt % 10;
+          if (n10 > 10 && n10 < 20) return many;
+          if (n1 === 1) return one;
+          if (n1 > 1 && n1 < 5) return few;
+          return many;
+        }
+
+        n = Math.floor(Math.abs(n));
+        if (n === 0) return 'ноль';
+
+        var parts = [];
+        var bil = Math.floor(n / 1e9);
+        var mil = Math.floor((n % 1e9) / 1e6);
+        var tho = Math.floor((n % 1e6) / 1e3);
+        var uni = n % 1000;
+
+        if (bil) {
+          parts.push(chunk999(bil, false) + ' ' + triadName(bil, 'миллиард', 'миллиарда', 'миллиардов'));
+        }
+        if (mil) {
+          parts.push(chunk999(mil, false) + ' ' + triadName(mil, 'миллион', 'миллиона', 'миллионов'));
+        }
+        if (tho) {
+          parts.push(chunk999(tho, true) + ' ' + triadName(tho, 'тысяча', 'тысячи', 'тысяч'));
+        }
+        if (uni) {
+          parts.push(chunk999(uni, false));
+        }
+
+        return parts.join(' ').replace(/\s+/g, ' ').trim();
+      }
+
+      function cartLineUnit(L) {
+        if (L.isCustom) return 'усл.';
+        var t = (L.product.title || '').toLowerCase();
+        if (t.indexOf('кабель') !== -1 || t.indexOf('провод') !== -1 || t.indexOf('ввг') !== -1) return 'м';
+        return 'шт';
+      }
+
+      function buildPdfTableHtml(lines, total) {
+        var rows = lines.map(function (L, idx) {
+          var titleCell = L.product.brand ? esc(L.product.brand) + ' · ' + esc(L.product.title) : esc(L.product.title);
+          if (L.isCustom && L.product.desc) titleCell += '<br><small style="color:#444">' + esc(L.product.desc).replace(/\n/g, '<br>') + '</small>';
+          var priceUnit = L.product.price;
+          var sumLine = L.lineSum;
+          return (
+            '<tr>' +
+            '<td style="text-align:center">' + (idx + 1) + '</td>' +
+            '<td>' + titleCell + '</td>' +
+            '<td style="text-align:right;white-space:nowrap">' + formatMoney(priceUnit) + '</td>' +
+            '<td style="text-align:center">' + L.qty + '</td>' +
+            '<td style="text-align:right;white-space:nowrap;font-weight:600">' + formatMoney(sumLine) + '</td>' +
+            '</tr>'
+          );
+        }).join('');
+        return (
+          '<h1>Корзина</h1>' +
+          '<p style="font-size:10pt;color:#666;margin:0 0 14pt">Состав заказа · Московская область · ' + new Date().toLocaleString('ru-RU', { dateStyle: 'long', timeStyle: 'short' }) + '</p>' +
+          '<table>' +
+          '<thead><tr>' +
+          '<th style="width:28pt">№</th><th>Наименование</th><th>Цена за ед.</th><th>Кол-во</th><th>Сумма по позиции</th>' +
+          '</tr></thead><tbody>' +
+          rows +
+          '</tbody>' +
+          '<tfoot><tr>' +
+          '<td colspan="4" style="text-align:right">Итого по корзине</td>' +
+          '<td style="text-align:right;white-space:nowrap">' + formatMoney(total) + '</td>' +
+          '</tr></tfoot>' +
+          '</table>' +
+          '<div class="pdf-brand-footer">' +
+          '<span class="pdf-brand-accent">Строй</span>Фаст' +
+          '<span class="pdf-brand-sub">Строительный магазин · доставка стройматериалов</span>' +
+          '</div>'
+        );
+      }
+
+      function exportCartPdf() {
+        var lines = getCartLines();
+        if (!lines.length) {
+          alert('Корзина пуста — нечего экспортировать.');
+          return;
+        }
+        if (typeof html2pdf === 'undefined') {
+          alert('Библиотека PDF не загрузилась. Проверьте подключение к интернету и обновите страницу.');
+          return;
+        }
+        var total = getCartTotalSum(lines);
+        var overlay = document.createElement('div');
+        overlay.className = 'pdf-export-overlay';
+        overlay.setAttribute('role', 'presentation');
+
+        var hint = document.createElement('div');
+        hint.className = 'pdf-export-hint';
+        hint.textContent = 'Сохраняем PDF…';
+
+        var host = document.createElement('div');
+        host.className = 'pdf-gen-host';
+        host.setAttribute('aria-hidden', 'true');
+        host.innerHTML = buildPdfTableHtml(lines, total);
+        overlay.appendChild(hint);
+        overlay.appendChild(host);
+
+        var prevOverflow = document.body.style.overflow;
+        document.body.style.overflow = 'hidden';
+        document.body.appendChild(overlay);
+
+        function cleanup() {
+          document.body.style.overflow = prevOverflow;
+          if (overlay.parentNode) overlay.parentNode.removeChild(overlay);
+        }
+
+        var isCoarse = typeof window.matchMedia === 'function' && window.matchMedia('(pointer: coarse)').matches;
+        var scale = isCoarse ? Math.min(2, window.devicePixelRatio || 2) : 2;
+
+        var opt = {
+          margin: 12,
+          filename: getCartExportFileBasename() + '.pdf',
+          image: { type: 'jpeg', quality: 0.95 },
+          html2canvas: {
+            scale: scale,
+            useCORS: true,
+            logging: false,
+            scrollX: 0,
+            scrollY: 0,
+            backgroundColor: '#ffffff',
+            foreignObjectRendering: false
+          },
+          jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+          pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
+        };
+
+        var delayMs = isCoarse ? 200 : 80;
+
+        requestAnimationFrame(function () {
+          requestAnimationFrame(function () {
+            setTimeout(function () {
+              html2pdf()
+                .set(opt)
+                .from(host)
+                .save()
+                .then(cleanup)
+                .catch(function (err) {
+                  cleanup();
+                  console.error(err);
+                  alert('Не удалось сформировать PDF. Попробуйте ещё раз.');
+                });
+            }, delayMs);
+          });
+        });
+      }
+
+      function exportCartXlsx() {
+        var lines = getCartLines();
+        if (!lines.length) {
+          alert('Корзина пуста — нечего экспортировать.');
+          return;
+        }
+        if (typeof XLSX === 'undefined') {
+          alert('Библиотека Excel не загрузилась. Проверьте подключение к интернету и обновите страницу.');
+          return;
+        }
+        var totalSum = getCartTotalSum(lines);
+        var totalRounded = Math.round(totalSum);
+        var d = new Date();
+
+        var merges = [];
+        var row = 0;
+
+        var data = [];
+
+        data.push(['Товарный чек № ___ от ' + formatReceiptDateRu(d)]);
+        merges.push({ s: { r: row, c: 0 }, e: { r: row, c: 5 } });
+        row++;
+
+        data.push([]);
+        row++;
+
+        data.push(['№', 'Товар', 'Ед.', 'Кол-во', 'Цена', 'Сумма']);
+        row++;
+
+        for (var i = 0; i < lines.length; i++) {
+          var L = lines[i];
+          var tovar;
+          if (L.isCustom) {
+            tovar = L.product.title;
+            if (L.product.desc) tovar += ' (' + L.product.desc.replace(/\n/g, ' · ') + ')';
+          } else {
+            tovar = L.product.title + (L.product.brand ? ' ' + L.product.brand : '');
+          }
+          data.push([
+            i + 1,
+            tovar,
+            cartLineUnit(L),
+            L.qty,
+            formatExcelReceiptSum(L.product.price),
+            formatExcelReceiptSum(L.lineSum)
+          ]);
+          row++;
+        }
+
+        data.push([]);
+        row++;
+
+        data.push(['', '', '', '', 'Итого', formatExcelReceiptSum(totalSum)]);
+        row++;
+
+        data.push([]);
+        row++;
+
+        var sumSpaced = String(totalRounded).replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+        data.push([
+          'Всего ' + lines.length + ' ' + itemsWordForm(lines.length) + ', на сумму ' + sumSpaced + ' ' + rubleWordForm(totalRounded) + ' 00 копеек'
+        ]);
+        merges.push({ s: { r: row, c: 0 }, e: { r: row, c: 5 } });
+        row++;
+
+        data.push([
+          capitalizeFirstRu(intToWordsRub(totalRounded)) + ' ' + rubleWordForm(totalRounded) + ' 00 копеек'
+        ]);
+        merges.push({ s: { r: row, c: 0 }, e: { r: row, c: 5 } });
+        row++;
+
+        data.push([
+          'Отпустил ________________ (подпись) / ________________ (фамилия) / ________________ (Ф.И.О.)'
+        ]);
+        merges.push({ s: { r: row, c: 0 }, e: { r: row, c: 5 } });
+        row++;
+
+        data.push([]);
+        row++;
+
+        data.push(['СтройФаст — строительный магазин · Московская область']);
+        merges.push({ s: { r: row, c: 0 }, e: { r: row, c: 5 } });
+
+        var ws = XLSX.utils.aoa_to_sheet(data);
+        ws['!merges'] = merges;
+        ws['!cols'] = [
+          { wch: 5 },
+          { wch: 50 },
+          { wch: 6 },
+          { wch: 8 },
+          { wch: 12 },
+          { wch: 14 }
+        ];
+
+        var wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'Товарный чек');
+        XLSX.writeFile(wb, getCartExportFileBasename() + '.xlsx');
+      }
+
+      function bindTap(el, handler) {
+        if (!el) return;
+        var tapped = false;
+        el.addEventListener('touchend', function (e) {
+          tapped = true;
+          e.preventDefault();
+          handler(e);
+          setTimeout(function () { tapped = false; }, 360);
+        }, { passive: false });
+        el.addEventListener('click', function (e) {
+          if (tapped) {
+            e.preventDefault();
+            return;
+          }
+          handler(e);
+        });
+      }
+
+      document.querySelectorAll('.js-cart-trigger').forEach(function (btn) {
+        bindTap(btn, function () {
+          if (cartDrawer.classList.contains('is-open')) closeCart();
+          else openCart();
+        });
+      });
+      bindViewModeToggle();
+      closeCartBtn.addEventListener('click', closeCart);
+      cartBackdrop.addEventListener('click', closeCart);
+
+      cartDrawerBody.addEventListener('click', function (e) {
+        var dec = e.target.closest('.js-qty-dec');
+        var inc = e.target.closest('.js-qty-inc');
+        var rm = e.target.closest('.js-cart-remove');
+        if (dec) addToCart(dec.getAttribute('data-product-id'), -1);
+        if (inc) addToCart(inc.getAttribute('data-product-id'), 1);
+        if (rm) clearCartLine(rm.getAttribute('data-product-id'));
+      });
+
+      exportPdfBtn.addEventListener('click', exportCartPdf);
+      exportExcelBtn.addEventListener('click', exportCartXlsx);
+
+      cartCheckoutBtn.addEventListener('click', function () {
+        var lines = getCartLines();
+        if (!lines.length) return;
+        closeCart();
+        openModal({ context: 'Оформление заказа из корзины', prefillComment: getCartSummaryForLead() });
+      });
+
+      document.addEventListener('click', function (e) {
+        var addBtn = e.target.closest('.js-add-cart');
+        if (!addBtn) return;
+        var pid = addBtn.getAttribute('data-product-id');
+        if (pid) addToCart(pid, 1);
+      });
+
+      function esc(s) {
+        var d = document.createElement('div');
+        d.textContent = s;
+        return d.innerHTML;
+      }
+
+      function productCardHtml(p) {
+        var stockClass = p.stock === 'in' ? 'in-stock' : 'on-order';
+        var stockText = p.stock === 'in' ? 'В наличии' : 'Под заказ';
+        var stockIcon = p.stock === 'in' ? 'fa-circle-check' : 'fa-clock';
+        var imgSrc = p.image ? esc(p.image) : '';
+        var imgAlt = esc(p.brand + ' ' + p.title);
+        var mediaHtml = imgSrc
+          ? '<div class="product-media"><img src="' + imgSrc + '" alt="' + imgAlt + '" width="400" height="400" loading="lazy" decoding="async"></div>'
+          : '';
+        return (
+          '<article class="product-card" data-product-id="' + esc(p.id) + '" data-category="' + esc(p.category) + '" data-stock="' + esc(p.stock) + '" data-title="' + esc(p.title) + '" data-new="' + p.newOrder + '">' +
+            mediaHtml +
+            '<div class="product-brand">' + esc(p.brand) + '</div>' +
+            '<h3 class="product-title">' + esc(p.title) + '</h3>' +
+            '<p class="product-desc">' + esc(p.desc) + '</p>' +
+            '<div class="product-stock ' + stockClass + '">' +
+              '<i class="fa-solid ' + stockIcon + '" aria-hidden="true"></i> ' + stockText +
+            '</div>' +
+            '<p class="product-price">' + formatMoney(p.price) + ' <small>за шт.</small></p>' +
+            '<div class="product-actions">' +
+            '<button type="button" class="btn btn-block btn-cart js-add-cart" data-product-id="' + esc(p.id) + '"><i class="fa-solid fa-cart-plus" aria-hidden="true"></i> В корзину</button>' +
+            '<button type="button" class="btn btn-block btn-ghost js-open-modal" data-product="' + esc(p.brand + ' — ' + p.title) + '">Заявка</button>' +
+            '</div>' +
+          '</article>'
+        );
+      }
+
+    function recCardHtml(p) {
+      var imgSrc = p.image ? esc(p.image) : '';
+      var imgAlt = esc(p.brand + ' ' + p.title);
+      var mediaHtml = imgSrc
+        ? '<div class="rec-media"><img src="' + imgSrc + '" alt="' + imgAlt + '" width="400" height="300" loading="lazy" decoding="async"></div>'
+        : '';
+      return (
+        '<article class="rec-card" data-product-id="' + esc(p.id) + '">' +
+          mediaHtml +
+          '<h3>' + esc(p.brand + ' · ' + p.title) + '</h3>' +
+          '<p>' + esc(p.desc) + '</p>' +
+          '<p class="rec-price">' + formatMoney(p.price) + '</p>' +
+          '<div class="product-actions">' +
+          '<button type="button" class="btn btn-block btn-cart js-add-cart" data-product-id="' + esc(p.id) + '"><i class="fa-solid fa-cart-plus" aria-hidden="true"></i> В корзину</button>' +
+          '<button type="button" class="btn btn-block btn-ghost js-open-modal" data-product="' + esc(p.brand + ' — ' + p.title) + '">Заказать</button>' +
+          '</div>' +
+        '</article>'
+      );
+    }
+
+    function renderCatalog(order) {
+      var list = products.slice();
+      if (order === 'alpha') {
+        list.sort(function (a, b) {
+          return a.title.localeCompare(b.title, 'ru');
+        });
+      } else {
+        list.sort(function (a, b) {
+          return a.newOrder - b.newOrder;
+        });
+      }
+      catalogGrid.innerHTML = list.map(function (p) {
+        return productCardHtml(p);
+      }).join('');
+      bindModalTriggers();
+      applyFilters();
+    }
+
+    function renderRecs() {
+      recGrid.innerHTML = recIds.map(function (i) {
+        return recCardHtml(products[i]);
+      }).join('');
+      bindModalTriggers();
+    }
+
+    function getActiveCategory() {
+      var active = document.querySelector('#categoryChips .chip.is-active');
+      return active ? active.getAttribute('data-category') : 'all';
+    }
+
+    function applyFilters() {
+      var cat = getActiveCategory();
+      var onlyIn = inStockOnly.checked;
+      var q = (headerSearchQuery || '').trim().toLowerCase();
+      catalogGrid.querySelectorAll('.product-card').forEach(function (card) {
+        var c = card.getAttribute('data-category');
+        var s = card.getAttribute('data-stock');
+        var t = (card.getAttribute('data-title') || '').toLowerCase();
+        var catOk = cat === 'all' || c === cat;
+        var stockOk = !onlyIn || s === 'in';
+        var searchOk = !q || t.indexOf(q) !== -1 || card.textContent.toLowerCase().indexOf(q) !== -1;
+        card.classList.toggle('is-hidden', !(catOk && stockOk && searchOk));
+      });
+    }
+
+    function openModal(opts) {
+      opts = opts || {};
+      closeCatalogMega();
+      closeCart();
+      leadContext.value = opts.context || '';
+      if (opts.product) {
+        leadComment.value = 'Товар: ' + opts.product + '\n';
+      } else if (opts.prefillComment) {
+        leadComment.value = opts.prefillComment + '\n';
+      } else {
+        leadComment.value = '';
+      }
+      modalBackdrop.hidden = false;
+      modalBackdrop.classList.add('is-open');
+      document.body.classList.add('modal-open');
+      document.getElementById('leadName').focus();
+    }
+
+    function closeModal() {
+      modalBackdrop.classList.remove('is-open');
+      document.body.classList.remove('modal-open');
+      setTimeout(function () {
+        modalBackdrop.hidden = true;
+      }, 200);
+    }
+
+    function bindModalTriggers() {
+      document.querySelectorAll('.js-open-modal').forEach(function (btn) {
+        if (btn.dataset.bound) return;
+        btn.dataset.bound = '1';
+        btn.addEventListener('click', function () {
+          var product = btn.getAttribute('data-product');
+          var context = btn.getAttribute('data-context') || 'Заявка';
+          if (product) {
+            openModal({ context: 'Заявка на товар', product: product });
+          } else {
+            openModal({ context: context, prefillComment: context });
+          }
+        });
+      });
+    }
+
+    chips.forEach(function (chip) {
+      chip.addEventListener('click', function () {
+        headerSearchQuery = '';
+        if (headerSearchInput) headerSearchInput.value = '';
+        chips.forEach(function (c) { c.classList.remove('is-active'); });
+        chip.classList.add('is-active');
+        applyFilters();
+      });
+    });
+
+    inStockOnly.addEventListener('change', applyFilters);
+
+    sortSelect.addEventListener('change', function () {
+      renderCatalog(sortSelect.value);
+    });
+
+    modalClose.addEventListener('click', closeModal);
+    modalBackdrop.addEventListener('click', function (e) {
+      if (e.target === modalBackdrop) closeModal();
+    });
+
+    document.addEventListener('keydown', function (e) {
+      if (e.key !== 'Escape') return;
+      if (modalBackdrop.classList.contains('is-open')) {
+        closeModal();
+        return;
+      }
+      if (isCatalogMegaOpen()) {
+        closeCatalogMega();
+        return;
+      }
+      if (cartDrawer.classList.contains('is-open')) closeCart();
+    });
+
+    leadForm.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var submitBtn = leadForm.querySelector('button[type="submit"]');
+      var prevText = submitBtn ? submitBtn.textContent : '';
+      var fd = new FormData(leadForm);
+      var payload = {
+        name: String(fd.get('name') || '').trim(),
+        phone: String(fd.get('phone') || '').trim(),
+        comment: String(fd.get('comment') || '').trim(),
+        context: String(fd.get('context') || '').trim(),
+        contact: String(fd.get('contact') || '').trim(),
+        website: String(fd.get('website') || '').trim()
+      };
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Отправка…';
+      }
+      fetch('telegram_notify.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      })
+        .then(function (r) {
+          return r.json().then(function (j) {
+            return { okHttp: r.ok, j: j };
+          });
+        })
+        .then(function (x) {
+          if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.textContent = prevText;
+          }
+          if (x.okHttp && x.j && x.j.ok) {
+            alert('Заявка отправлена. Свяжемся в течение часа');
+            leadForm.reset();
+            closeModal();
+            return;
+          }
+          var err = x.j && x.j.error;
+          var msg;
+          if (err === 'invalid_name') msg = 'Укажите имя.';
+          else if (err === 'invalid_phone') msg = 'Укажите корректный телефон.';
+          else if (err === 'config_missing' || err === 'telegram_not_configured') {
+            msg = 'Отправка заявок временно недоступна. Позвоните нам или напишите в мессенджер.';
+          } else msg = 'Не удалось отправить заявку. Попробуйте позже или позвоните нам.';
+          alert(msg);
+        })
+        .catch(function () {
+          if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.textContent = prevText;
+          }
+          alert('Нет связи с сервером. Проверьте интернет или откройте сайт по адресу хостинга (нужен PHP).');
+        });
+    });
+
+    document.getElementById('delCalcBtn').addEventListener('click', function () {
+      var el = document.getElementById('delEstimate');
+      var res = computeDeliveryEstimate();
+      if (!res.ok) {
+        el.textContent = res.msg;
+        el.classList.add('is-visible');
+        return;
+      }
+      el.textContent = res.msg;
+      el.classList.add('is-visible');
+    });
+
+    document.getElementById('delAddCartBtn').addEventListener('click', function () {
+      addDeliveryLineToCart();
+    });
+
+    document.getElementById('calcSubmit').addEventListener('click', function () {
+      var area = parseFloat(document.getElementById('calcArea').value, 10) || 0;
+      var height = parseFloat(document.getElementById('calcHeight').value, 10) || 2.7;
+      var type = document.getElementById('calcType').value;
+      var wastePct = parseInt(document.getElementById('calcWaste').value, 10) || 8;
+      var screedMm = parseFloat(document.getElementById('calcScreed').value, 10) || 50;
+      var doors = parseInt(document.getElementById('calcDoors').value, 10) || 0;
+      var wins = parseInt(document.getElementById('calcWindows').value, 10) || 0;
+      var primer = document.getElementById('calcPrimer').checked;
+      var resultEl = document.getElementById('calcResult');
+      var breakEl = document.getElementById('calcBreakdown');
+      if (!area || area < 1) {
+        resultEl.textContent = 'Укажите площадь от 1 м²';
+        resultEl.classList.add('is-visible');
+        breakEl.textContent = '';
+        return;
+      }
+      var r = calcRates[type] || calcRates.screed;
+      var wasteMult = 1 + wastePct / 100;
+      var heightMult = 1;
+      if (type === 'plaster' || type === 'tile' || type === 'paint') {
+        heightMult = Math.pow(height / 2.7, 0.35);
+      }
+      var thMult = 1;
+      if (type === 'screed') {
+        thMult = Math.max(0.55, screedMm / 50);
+      }
+      var low = area * r.min * wasteMult * heightMult * thMult;
+      var high = area * r.max * wasteMult * heightMult * thMult;
+      if (primer) {
+        low *= 1.06;
+        high *= 1.06;
+      }
+      low += doors * 420 + wins * 180;
+      high += doors * 680 + wins * 320;
+      low = Math.round(low);
+      high = Math.round(high);
+      if (high < low) { var t = low; low = high; high = t; }
+
+      resultEl.textContent = 'Примерная стоимость материалов: от ' + low.toLocaleString('ru-RU') + ' до ' + high.toLocaleString('ru-RU') + ' руб.';
+      resultEl.classList.add('is-visible');
+
+      var parts = [];
+      parts.push('Площадь ' + area + ' м², запас ' + wastePct + ' %');
+      if (type === 'screed') parts.push('Слой стяжки ~' + screedMm + ' мм');
+      if (type === 'plaster' || type === 'tile' || type === 'paint') parts.push('Высота потолков ' + height + ' м');
+      parts.push('Учтены проёмы: дверей ' + doors + ', окон ' + wins);
+      if (primer) parts.push('Включён ориентир на грунтовку');
+      parts.push('Без учёта доставки и работ');
+      breakEl.textContent = parts.join('. ') + '.';
+    });
+
+    bindTap(navToggle, function () {
+      var open = navMobile.classList.toggle('is-open');
+      navToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+      if (open) closeCatalogMega();
+    });
+
+    bindTap(catalogMegaBtn, function () {
+      toggleCatalogMega();
+    });
+
+    if (catalogMegaBackdrop) {
+      catalogMegaBackdrop.addEventListener('click', closeCatalogMega);
+    }
+
+    window.addEventListener(
+      'scroll',
+      function () {
+        if (isCatalogMegaOpen()) positionCatalogMega();
+      },
+      true
+    );
+
+    window.addEventListener('resize', function () {
+      if (isCatalogMegaOpen()) positionCatalogMega();
+      updateViewModeToggleLabel();
+    });
+
+    if (headerSearchForm) {
+      headerSearchForm.addEventListener('submit', function (e) {
+        e.preventDefault();
+        headerSearchQuery = headerSearchInput ? headerSearchInput.value.trim() : '';
+        closeCatalogMega();
+        var ce = document.getElementById('catalog');
+        if (ce) ce.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        chips.forEach(function (c) {
+          c.classList.toggle('is-active', c.getAttribute('data-category') === 'all');
+        });
+        applyFilters();
+      });
+    }
+
+    navMobile.querySelectorAll('a').forEach(function (a) {
+      a.addEventListener('click', function () {
+        navMobile.classList.remove('is-open');
+        navToggle.setAttribute('aria-expanded', 'false');
+        closeCatalogMega();
+      });
+    });
+
+    document.querySelectorAll('.header-nav-secondary a').forEach(function (a) {
+      a.addEventListener('click', function () {
+        closeCatalogMega();
+      });
+    });
+
+    document.getElementById('year').textContent = new Date().getFullYear();
+    updateViewModeToggleLabel();
+
+    initMegaCatalog();
+    renderCatalog(sortSelect.value);
+    renderRecs();
+    bindModalTriggers();
+    renderCartDrawer();
+    })();
+  </script>
+</body>
+</html>
