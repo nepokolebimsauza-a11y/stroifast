@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+убе<!DOCTYPE html>
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
@@ -1001,22 +1001,21 @@
       color: var(--order);
     }
 
-    /* Brands */
-    .brands-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 12px;
+    /* Brands: 11 плиток, ряды по центру (5 + 5 + 1 на широком экране) */
+    #brands .brands-grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: stretch;
+      gap: 12px 14px;
+      max-width: 980px;
+      margin-left: auto;
+      margin-right: auto;
     }
 
     @media (min-width: 640px) {
-      .brands-grid {
-        grid-template-columns: repeat(3, 1fr);
-      }
-    }
-
-    @media (min-width: 900px) {
-      .brands-grid {
-        grid-template-columns: repeat(6, 1fr);
+      #brands .brands-grid {
+        gap: 14px 16px;
       }
     }
 
@@ -1024,15 +1023,52 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      min-height: 72px;
-      padding: 16px;
+      box-sizing: border-box;
+      flex: 1 1 calc(50% - 8px);
+      min-width: 0;
+      max-width: calc(50% - 8px);
+      min-height: 76px;
+      padding: 14px 12px;
       border-radius: var(--radius-card);
-      background: #fafafa;
+      background: linear-gradient(180deg, #fff 0%, #f8fafc 100%);
       border: 1px solid var(--border);
       font-weight: 600;
-      font-size: 14px;
+      font-size: 13px;
+      letter-spacing: 0.02em;
       text-align: center;
       color: var(--muted);
+      line-height: 1.25;
+      transition: border-color 0.2s, box-shadow 0.2s, color 0.2s;
+    }
+
+    @media (min-width: 400px) {
+      .brand-tile {
+        flex: 0 1 calc(33.333% - 12px);
+        max-width: calc(33.333% - 12px);
+        min-width: 140px;
+      }
+    }
+
+    @media (min-width: 720px) {
+      .brand-tile {
+        flex: 0 1 calc(25% - 14px);
+        max-width: calc(25% - 14px);
+        min-width: 158px;
+      }
+    }
+
+    @media (min-width: 1024px) {
+      .brand-tile {
+        flex: 0 1 168px;
+        max-width: 168px;
+        min-width: 168px;
+      }
+    }
+
+    .brand-tile:hover {
+      border-color: rgba(37, 99, 235, 0.35);
+      color: var(--text);
+      box-shadow: 0 4px 14px rgba(37, 99, 235, 0.1);
     }
 
     /* Calculator */
@@ -1242,16 +1278,21 @@
       }
     }
 
-    /* Services */
+    /* Services: две карточки, по центру на широких экранах */
     .services-grid {
       display: grid;
       grid-template-columns: 1fr;
       gap: 16px;
+      max-width: 520px;
+      margin-left: auto;
+      margin-right: auto;
     }
 
     @media (min-width: 768px) {
       .services-grid {
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        max-width: 880px;
+        gap: 20px;
       }
     }
 
@@ -2363,7 +2404,7 @@
         </button>
         <div class="header-search-wrap">
           <form class="header-search" id="headerSearchForm" role="search" action="#catalog">
-            <input type="search" id="headerSearchInput" name="q" autocomplete="off" placeholder="Смеси, кабель, сантехника, аренда инструмента…" aria-label="Поиск по каталогу" aria-autocomplete="list" aria-controls="searchSuggestionsList" aria-expanded="false">
+            <input type="search" id="headerSearchInput" name="q" autocomplete="off" placeholder="Смеси, кабель, сантехника, доставка…" aria-label="Поиск по каталогу" aria-autocomplete="list" aria-controls="searchSuggestionsList" aria-expanded="false">
             <button type="submit" class="header-search-btn">Найти</button>
           </form>
           <div class="search-suggestions" id="searchSuggestions" hidden role="region" aria-label="Подсказки поиска">
@@ -2621,11 +2662,6 @@
       <p class="section-lead">Как у крупных сетей: удобно подъехать, забрать или получить на объекте.</p>
       <div class="services-grid">
         <article class="service-card">
-          <div class="icon" aria-hidden="true"><i class="fa-solid fa-screwdriver-wrench"></i></div>
-          <h3>Аренда инструмента</h3>
-          <p>Перфораторы, шлифмашины, виброплиты — сдаём по суткам, подскажем насадки.</p>
-        </article>
-        <article class="service-card">
           <div class="icon" aria-hidden="true"><i class="fa-solid fa-user-tie"></i></div>
           <h3>Помощь профессионала</h3>
           <p>Консультируем по технологии и расходу материалов, поможем избежать переделок.</p>
@@ -2675,7 +2711,7 @@
         <div>
           <h3>Сервисы</h3>
           <ul>
-            <li><a href="#services">Аренда инструмента</a></li>
+            <li><a href="#services">Помощь и доставка</a></li>
             <li><a href="#services">Консультация</a></li>
             <li><a href="#calculator">Калькулятор</a></li>
           </ul>
@@ -3349,7 +3385,7 @@
       ];
 
       var MEGA_CATALOG_FOOTER = [
-        { label: 'Аренда инструмента', icon: 'fa-clock', href: '#services' },
+        { label: 'Помощь и доставка', icon: 'fa-truck-ramp-box', href: '#services' },
         { label: 'Новинки', icon: 'fa-tag', href: '#catalog', sortNew: true }
       ];
 
