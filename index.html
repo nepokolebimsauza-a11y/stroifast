@@ -4343,6 +4343,8 @@
         }
       }
 
+      var CART_QTY_CAP = 99999;
+
       function getCartLines() {
         var cart = loadCart();
         var lines = [];
@@ -4352,9 +4354,11 @@
           if (entry && typeof entry === 'object' && entry.custom && entry.qty) {
             var cq = parseInt(entry.qty, 10);
             if (!cq || cq < 1) continue;
+            cq = Math.min(cq, CART_QTY_CAP);
             var c = entry.custom;
-            var unit = parseFloat(c.price, 10);
-            if (isNaN(unit)) unit = 0;
+            var unit = parseFloat(String(c.price));
+            if (isNaN(unit) || unit < 0) unit = 0;
+            if (unit > 1e9) unit = 0;
             lines.push({
               id: id,
               product: { brand: c.brand, title: c.title, price: unit, desc: c.details || '' },
@@ -4366,6 +4370,7 @@
           }
           var qty = parseInt(entry, 10);
           if (!qty || qty < 1) continue;
+          qty = Math.min(qty, CART_QTY_CAP);
           var p = getProductById(id);
           if (!p) continue;
           lines.push({
@@ -5080,7 +5085,7 @@
           ? '<div class="product-media"><img src="' + imgSrc + '" alt="' + imgAlt + '" width="400" height="400" loading="lazy" decoding="async"></div>'
           : '';
         return (
-          '<article class="product-card" data-product-id="' + esc(p.id) + '" data-category="' + esc(p.category) + '" data-stock="' + esc(p.stock) + '" data-title="' + esc(p.title) + '" data-new="' + p.newOrder + '">' +
+          '<article class="product-card" data-product-id="' + esc(p.id) + '" data-category="' + esc(p.category) + '" data-stock="' + esc(p.stock) + '" data-title="' + esc(p.title) + '" data-new="' + esc(String(Math.floor(Number(p.newOrder)) || 0)) + '">' +
             mediaHtml +
             '<div class="product-brand">' + esc(p.brand) + '</div>' +
             '<h3 class="product-title">' + esc(p.title) + '</h3>' +
@@ -5337,8 +5342,10 @@
           var msg;
           if (err === 'invalid_name') msg = 'Укажите имя.';
           else if (err === 'invalid_phone') msg = 'Укажите корректный телефон.';
-          else if (err === 'invalid_comment' || err === 'invalid_context' || err === 'invalid_contact') {
+          else if (err === 'invalid_comment' || err === 'invalid_context') {
             msg = 'Слишком длинный текст в заявке. Сократите комментарий или тему.';
+          } else if (err === 'invalid_contact') {
+            msg = 'Проверьте способ связи и длину полей. Обновите страницу и попробуйте снова.';
           } else if (err === 'payload_too_large') {
             msg = 'Слишком большой запрос. Сократите текст и попробуйте снова.';
           } else if (err === 'rate_limited') {
