@@ -20,13 +20,49 @@
     })();
   </script>
   <meta name="referrer" content="strict-origin-when-cross-origin">
+  <meta name="description" content="СтройФаст — строительные материалы в Московской области: смеси, сантехника, электрика, доставка с погрузкой и разгрузкой. Подбор под задачу, оплата после согласования.">
+  <meta name="theme-color" content="#2563eb">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="СтройФаст — материалы для ремонта с доставкой">
+  <meta property="og:description" content="Смеси, сантехника, электрика и расходники. Московская область и прилегающие районы. Расчёт сметы и заявка онлайн.">
   <title>СтройФаст - Магазин строительных материалов с разгрузкой и доставкой</title>
+  <script>
+    (function () {
+      try {
+        var path = location.pathname.replace(/\/index\.html?$/i, '/');
+        if (path === '/') path = '/';
+        var baseUrl = (location.origin + path).replace(/\/+$/, '') || location.origin;
+        var data = {
+          '@context': 'https://schema.org',
+          '@type': 'HardwareStore',
+          name: 'СтройФаст',
+          description:
+            'Строительные материалы в Московской области: смеси, сантехника, электрика, доставка с погрузкой и разгрузкой.',
+          url: baseUrl,
+          telephone: '+7-983-401-91-44',
+          address: {
+            '@type': 'PostalAddress',
+            addressRegion: 'Московская область',
+            addressCountry: 'RU'
+          },
+          areaServed: { '@type': 'AdministrativeArea', name: 'Московская область' },
+          sameAs: ['https://t.me/stroifast', 'https://wa.me/79834019144']
+        };
+        var s = document.createElement('script');
+        s.type = 'application/ld+json';
+        s.textContent = JSON.stringify(data);
+        document.head.appendChild(s);
+      } catch (e) {}
+    })();
+  </script>
+  <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha384-t1nt8BQoYMLFN5p42tRAtuAAFQaCQODekUVeKKZrEnEyp4H2R0RHFz0KWpmj7i8g" crossorigin="anonymous">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap&amp;subset=latin,cyrillic" rel="stylesheet">
   <style>
     :root {
+      color-scheme: light;
       --text: #0f172a;
       --bg: #f8fafc;
       --muted: #475569;
@@ -40,6 +76,8 @@
       --accent-soft: #eff6ff;
       --footer: #0b1220;
       --shadow: 0 6px 16px rgba(37, 99, 235, 0.16);
+      --shadow-soft: 0 1px 2px rgba(15, 23, 42, 0.04), 0 4px 20px rgba(37, 99, 235, 0.07);
+      --shadow-hover: 0 12px 36px rgba(15, 23, 42, 0.12);
       --radius-card: 12px;
       --pad-card: 16px;
       --line: 1.4;
@@ -58,19 +96,183 @@
       scroll-behavior: smooth;
     }
 
+    @media (prefers-reduced-motion: reduce) {
+      html {
+        scroll-behavior: auto;
+      }
+    }
+
+    .skip-link {
+      position: absolute;
+      top: 0;
+      left: 12px;
+      z-index: 10000;
+      padding: 10px 16px;
+      font-weight: 600;
+      font-size: 14px;
+      color: var(--on-accent);
+      background: var(--accent);
+      border-radius: 0 0 10px 10px;
+      transform: translateY(-120%);
+      transition: transform 0.2s ease;
+    }
+
+    .skip-link:focus {
+      transform: translateY(0);
+      outline: 2px solid var(--accent-hover);
+      outline-offset: 2px;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .skip-link {
+        transition: none;
+      }
+    }
+
+    .toast-stack {
+      position: fixed;
+      z-index: 10001;
+      left: 50%;
+      bottom: max(20px, env(safe-area-inset-bottom, 0px));
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      align-items: center;
+      pointer-events: none;
+      width: min(420px, calc(100vw - 32px));
+    }
+
+    .toast {
+      pointer-events: auto;
+      width: 100%;
+      padding: 12px 16px;
+      border-radius: 10px;
+      font-size: 15px;
+      line-height: 1.35;
+      box-shadow: 0 10px 28px rgba(15, 23, 42, 0.15);
+      animation: toast-in 0.28s ease;
+    }
+
+    .toast--ok {
+      background: #ecfdf5;
+      color: #065f46;
+      border: 1px solid #6ee7b7;
+    }
+
+    .toast--err {
+      background: #fef2f2;
+      color: #991b1b;
+      border: 1px solid #fecaca;
+    }
+
+    .toast--info {
+      background: #fff;
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    .toast--out {
+      opacity: 0;
+      transform: translateY(6px);
+      transition: opacity 0.28s ease, transform 0.28s ease;
+    }
+
+    @keyframes toast-in {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .toast {
+        animation: none;
+      }
+      .toast--out {
+        transition: none;
+      }
+    }
+
     body {
       margin: 0;
       font-family: Inter, system-ui, Roboto, "Segoe UI", sans-serif;
       font-size: 16px;
       line-height: var(--line);
       color: var(--text);
-      background: var(--bg);
+      background-color: var(--bg);
+      background-image: radial-gradient(ellipse 100% 70% at 50% -35%, rgba(37, 99, 235, 0.06) 0%, transparent 55%);
     }
 
     img {
       max-width: 100%;
       height: auto;
       display: block;
+    }
+
+    .icon-svg {
+      display: inline-block;
+      width: 1em;
+      height: 1em;
+      vertical-align: -0.12em;
+      flex-shrink: 0;
+    }
+
+    .cart-header-btn .icon-svg {
+      width: 1.125rem;
+      height: 1.125rem;
+    }
+
+    .cart-fab .icon-svg {
+      width: 22px;
+      height: 22px;
+    }
+
+    .site-footer .footer-contact-icon.icon-svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    .delivery-block .delivery-icon .icon-svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    .service-card .icon .icon-svg {
+      width: 22px;
+      height: 22px;
+    }
+
+    .btn .icon-svg {
+      width: 1.1em;
+      height: 1.1em;
+    }
+
+    .header-messengers a .icon-svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    .btn-catalog .icon-svg {
+      width: 1.05rem;
+      height: 1.05rem;
+    }
+
+    .nav-toggle .icon-svg {
+      width: 1.15rem;
+      height: 1.15rem;
+    }
+
+    .top-bar .icon-svg--pin {
+      width: 15px;
+      height: 15px;
+      margin-right: 5px;
+      vertical-align: -2px;
+      color: var(--accent);
     }
 
     a {
@@ -87,7 +289,7 @@
 
     /* Top bar */
     .top-bar {
-      background: #fafafa;
+      background: #f8fafc;
       border-bottom: 1px solid var(--section-rule);
       font-size: 14px;
     }
@@ -150,9 +352,17 @@
       top: 0;
       z-index: 50;
       padding-top: env(safe-area-inset-top, 0px);
-      background: var(--bg);
-      border-bottom: 1px solid var(--section-rule);
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+      background: rgba(248, 250, 252, 0.88);
+      border-bottom: 1px solid rgba(203, 213, 225, 0.65);
+      box-shadow: 0 1px 0 rgba(255, 255, 255, 0.65) inset, 0 4px 20px rgba(15, 23, 42, 0.06);
+      backdrop-filter: blur(12px) saturate(1.15);
+      -webkit-backdrop-filter: blur(12px) saturate(1.15);
+    }
+
+    @supports not (backdrop-filter: blur(1px)) {
+      .site-header {
+        background: var(--bg);
+      }
     }
 
     .site-header .inner {
@@ -461,7 +671,10 @@
     }
 
     .logo span {
-      color: var(--accent);
+      background: linear-gradient(118deg, #2563eb 0%, #0ea5e9 55%, #2563eb 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
     }
 
     .nav-desktop {
@@ -652,11 +865,10 @@
       border-radius: 0;
     }
 
-    .catalog-mega-side-item i {
-      width: 22px;
-      text-align: center;
+    .catalog-mega-side-item .icon-svg {
+      width: 20px;
+      height: 20px;
       color: #555;
-      font-size: 15px;
       flex-shrink: 0;
     }
 
@@ -688,10 +900,11 @@
       border-radius: 0;
     }
 
-    .catalog-mega-side-foot a i {
-      width: 22px;
-      text-align: center;
+    .catalog-mega-side-foot a .icon-svg {
+      width: 20px;
+      height: 20px;
       color: #555;
+      flex-shrink: 0;
     }
 
     .catalog-mega-side-foot a:hover {
@@ -810,33 +1023,120 @@
 
     /* Hero */
     .hero {
-      padding: 48px 0 40px;
-      background: linear-gradient(180deg, var(--accent-soft) 0%, #fff 100%);
+      position: relative;
+      padding: 52px 0 48px;
+      border-bottom: 1px solid rgba(203, 213, 225, 0.55);
+      background:
+        repeating-linear-gradient(
+          -12deg,
+          transparent,
+          transparent 11px,
+          rgba(37, 99, 235, 0.028) 11px,
+          rgba(37, 99, 235, 0.028) 12px
+        ),
+        radial-gradient(ellipse 90% 65% at 92% -5%, rgba(37, 99, 235, 0.14) 0%, transparent 52%),
+        radial-gradient(ellipse 70% 50% at -5% 40%, rgba(14, 165, 233, 0.09) 0%, transparent 48%),
+        linear-gradient(175deg, #eef4ff 0%, #f8fafc 38%, #ffffff 100%);
+    }
+
+    .hero .container {
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-kicker {
+      margin: 0 0 10px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent);
     }
 
     .hero h1 {
-      margin: 0 0 12px;
-      font-size: clamp(1.75rem, 4vw, 2.35rem);
+      margin: 0 0 14px;
+      font-size: clamp(1.85rem, 4.2vw, 2.55rem);
       font-weight: 700;
-      line-height: 1.25;
+      line-height: 1.18;
+      letter-spacing: -0.035em;
+      text-wrap: balance;
+      color: #0f172a;
     }
 
     .hero p {
-      margin: 0 0 24px;
-      color: var(--muted);
-      max-width: 520px;
+      margin: 0 0 28px;
+      color: #475569;
+      max-width: 34rem;
+      font-size: clamp(15px, 2vw, 17px);
+      line-height: 1.55;
+    }
+
+    .hero .btn.btn-lg {
+      border: none;
+      color: var(--on-accent);
+      background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 48%, #1e40af 100%);
+      box-shadow: 0 4px 16px rgba(37, 99, 235, 0.38), 0 1px 0 rgba(255, 255, 255, 0.2) inset;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+    }
+
+    .hero .btn.btn-lg:hover,
+    .hero .btn.btn-lg:focus-visible {
+      color: var(--on-accent);
+      background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 52%, #172554 100%);
+      border-color: transparent;
+      box-shadow: 0 8px 28px rgba(37, 99, 235, 0.42);
+      filter: brightness(1.02);
+    }
+
+    .hero .btn.btn-lg:focus-visible {
+      outline: 2px solid #93c5fd;
+      outline-offset: 3px;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .hero .btn.btn-lg {
+        transition: filter 0.2s ease, box-shadow 0.2s ease;
+      }
+    }
+
+    @media (hover: hover) and (prefers-reduced-motion: no-preference) {
+      .hero .btn.btn-lg:hover {
+        transform: translateY(-1px);
+      }
     }
 
     /* Sections */
     .section {
       padding: 48px 0;
       border-top: 1px solid var(--section-rule);
+      content-visibility: auto;
+      contain-intrinsic-size: auto 520px;
+    }
+
+    .section-head-text {
+      flex: 1 1 auto;
+      min-width: 0;
+    }
+
+    .section-kicker {
+      margin: 0 0 6px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+
+    .section-head-text .section-title {
+      margin: 0 0 10px;
     }
 
     .section-title {
       margin: 0 0 8px;
       font-size: 1.5rem;
       font-weight: 700;
+      letter-spacing: -0.02em;
+      color: #0f172a;
     }
 
     .section-lead {
@@ -883,25 +1183,28 @@
     }
 
     .chip {
-      padding: 8px 14px;
+      padding: 8px 16px;
       font-family: inherit;
       font-size: 14px;
       font-weight: 500;
-      border: none;
+      border: 1px solid rgba(203, 213, 225, 0.95);
       border-radius: 999px;
-      background: var(--btn-bg);
+      background: rgba(255, 255, 255, 0.85);
       color: var(--text);
       cursor: pointer;
-      transition: background 0.2s, color 0.2s;
+      transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
     }
 
     .chip:hover {
-      background: #eaeaea;
+      background: #f1f5f9;
+      border-color: rgba(37, 99, 235, 0.22);
     }
 
     .chip.is-active {
       background: var(--accent);
       color: var(--on-accent);
+      border-color: transparent;
+      box-shadow: 0 2px 10px rgba(37, 99, 235, 0.28);
     }
 
     .checkbox-inline {
@@ -929,6 +1232,11 @@
       min-width: 200px;
     }
 
+    .sort-select:focus-visible {
+      outline: 2px solid rgba(37, 99, 235, 0.45);
+      outline-offset: 2px;
+    }
+
     /* Product grid: на узком экране 2 колонки, чтобы в скролл помещалось ≈4 карточки */
     .catalog-grid {
       display: grid;
@@ -953,14 +1261,28 @@
       flex-direction: column;
       padding: var(--pad-card);
       border-radius: var(--radius-card);
-      background: var(--bg);
-      box-shadow: var(--shadow);
-      transition: box-shadow 0.2s;
+      background: rgba(255, 255, 255, 0.94);
+      border: 1px solid rgba(226, 232, 240, 0.9);
+      box-shadow: var(--shadow-soft);
+      transition: box-shadow 0.25s ease, transform 0.25s ease, border-color 0.25s ease;
       overflow: hidden;
     }
 
     .product-card:hover {
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+      border-color: rgba(37, 99, 235, 0.22);
+      box-shadow: var(--shadow-hover);
+    }
+
+    @media (hover: hover) and (prefers-reduced-motion: no-preference) {
+      .product-card:hover {
+        transform: translateY(-3px);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .product-card {
+        transition: box-shadow 0.2s ease, border-color 0.2s ease;
+      }
     }
 
     .product-card.is-hidden {
@@ -969,7 +1291,7 @@
 
     .product-media {
       margin: calc(-1 * var(--pad-card)) calc(-1 * var(--pad-card)) 12px;
-      background: #f5f5f5;
+      background: linear-gradient(165deg, #f8fafc 0%, #f1f5f9 50%, #eef2f6 100%);
       aspect-ratio: 1 / 1;
       border-radius: var(--radius-card) var(--radius-card) 0 0;
       overflow: hidden;
@@ -1154,7 +1476,6 @@
       border-radius: 10px;
       background: rgba(23, 112, 96, 0.12);
       color: #1d6b5c;
-      font-size: 18px;
       margin-bottom: 10px;
     }
 
@@ -1250,23 +1571,38 @@
     }
 
     .service-card {
-      padding: var(--pad-card);
-      border-radius: var(--radius-card);
-      box-shadow: var(--shadow);
-      background: var(--bg);
+      padding: calc(var(--pad-card) + 4px);
+      border-radius: calc(var(--radius-card) + 2px);
+      box-shadow: var(--shadow-soft);
+      background: rgba(255, 255, 255, 0.92);
+      border: 1px solid rgba(226, 232, 240, 0.95);
+      transition: box-shadow 0.25s ease, border-color 0.25s ease, transform 0.25s ease;
+    }
+
+    @media (hover: hover) and (prefers-reduced-motion: no-preference) {
+      .service-card:hover {
+        transform: translateY(-2px);
+        border-color: rgba(37, 99, 235, 0.18);
+        box-shadow: var(--shadow-hover);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .service-card {
+        transition: box-shadow 0.2s ease, border-color 0.2s ease;
+      }
     }
 
     .service-card .icon {
       width: 48px;
       height: 48px;
       border-radius: 12px;
-      background: var(--btn-bg);
+      background: linear-gradient(145deg, #eff6ff 0%, #dbeafe 100%);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 22px;
       margin-bottom: 12px;
-      color: var(--text);
+      color: var(--accent);
     }
 
     .service-card h3 {
@@ -1296,11 +1632,27 @@
     .rec-card {
       padding: var(--pad-card);
       border-radius: var(--radius-card);
-      box-shadow: var(--shadow);
-      background: var(--bg);
+      border: 1px solid rgba(226, 232, 240, 0.9);
+      box-shadow: var(--shadow-soft);
+      background: rgba(255, 255, 255, 0.94);
       display: flex;
       flex-direction: column;
       overflow: hidden;
+      transition: box-shadow 0.25s ease, border-color 0.25s ease, transform 0.25s ease;
+    }
+
+    @media (hover: hover) and (prefers-reduced-motion: no-preference) {
+      .rec-card:hover {
+        transform: translateY(-2px);
+        border-color: rgba(37, 99, 235, 0.2);
+        box-shadow: var(--shadow-hover);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .rec-card {
+        transition: box-shadow 0.2s ease, border-color 0.2s ease;
+      }
     }
 
     .rec-card h3 {
@@ -1317,7 +1669,7 @@
 
     .rec-media {
       margin: calc(-1 * var(--pad-card)) calc(-1 * var(--pad-card)) 12px;
-      background: #f5f5f5;
+      background: linear-gradient(165deg, #f8fafc 0%, #f1f5f9 50%, #eef2f6 100%);
       aspect-ratio: 4 / 3;
       border-radius: var(--radius-card) var(--radius-card) 0 0;
       overflow: hidden;
@@ -1337,6 +1689,8 @@
       background: var(--bg);
       text-align: center;
       border-top: 1px solid var(--section-rule);
+      content-visibility: auto;
+      contain-intrinsic-size: auto 120px;
     }
 
     .pre-footer-tagline__inner {
@@ -1370,11 +1724,13 @@
 
     /* Footer */
     .site-footer {
-      background: var(--footer);
+      background: linear-gradient(180deg, #0f172a 0%, var(--footer) 45%, #070b14 100%);
       color: #e8e8e8;
       padding: 40px 0 max(24px, env(safe-area-inset-bottom, 0px));
       font-size: 14px;
-      border-top: 1px solid var(--section-rule);
+      border-top: 1px solid rgba(148, 163, 184, 0.12);
+      content-visibility: auto;
+      contain-intrinsic-size: auto 320px;
     }
 
     .footer-grid {
@@ -1435,8 +1791,6 @@
 
     .site-footer .footer-contact-icon {
       flex-shrink: 0;
-      font-size: 16px;
-      line-height: 1;
     }
 
     .footer-bottom {
@@ -1862,8 +2216,48 @@
     .cart-empty {
       text-align: center;
       color: var(--muted);
-      padding: 40px 16px;
+      padding: 36px 16px 44px;
       font-size: 15px;
+      line-height: 1.5;
+    }
+
+    .cart-empty__art {
+      width: 72px;
+      height: 56px;
+      margin: 0 auto 16px;
+      position: relative;
+      opacity: 0.88;
+    }
+
+    .cart-empty__art::before,
+    .cart-empty__art::after {
+      content: '';
+      position: absolute;
+      border-radius: 8px;
+    }
+
+    .cart-empty__art::before {
+      width: 44px;
+      height: 34px;
+      left: 0;
+      bottom: 0;
+      transform: rotate(-6deg);
+      border: 1px solid rgba(37, 99, 235, 0.22);
+      background: linear-gradient(135deg, #dbeafe, #bfdbfe);
+    }
+
+    .cart-empty__art::after {
+      width: 34px;
+      height: 28px;
+      right: 0;
+      top: 4px;
+      transform: rotate(8deg);
+      border: 1px solid rgba(37, 99, 235, 0.16);
+      background: linear-gradient(135deg, #eff6ff, #e0e7ff);
+    }
+
+    .cart-empty__msg {
+      margin: 0;
     }
 
     .cart-line {
@@ -2338,11 +2732,13 @@
   </style>
 </head>
 <body class="header-with-mega">
+  <a href="#main-content" class="skip-link visually-hidden-focus">К основному содержимому</a>
+  <div id="toastStack" class="toast-stack" aria-live="polite" aria-relevant="additions text"></div>
   <div class="top-bar">
     <div class="container inner">
       <div class="contacts">
-        <span>📍 Московская область и прилегающие районы</span>
-        <a href="tel:+79834019144"><i class="fa-solid fa-phone" aria-hidden="true"></i> +7 (983) 401-91-44</a>
+        <span><svg class="icon-svg icon-svg--pin" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s7-4.35 7-11a7 7 0 1 0-14 0c0 6.65 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>Московская область и прилегающие районы</span>
+        <a href="tel:+79834019144"><svg class="icon-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.12.86.3 1.7.54 2.5a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.58-1.58a2 2 0 0 1 2.11-.45c.8.24 1.64.42 2.5.54A2 2 0 0 1 22 16.92z"/></svg> +7 (983) 401-91-44</a>
       </div>
     </div>
   </div>
@@ -2350,9 +2746,9 @@
   <header class="site-header">
     <div class="container">
       <div class="header-toolbar">
-        <a href="#hero" class="logo">Строй<span>Фаст</span></a>
+        <a href="#main-content" class="logo">Строй<span>Фаст</span></a>
         <button type="button" class="btn-catalog" id="catalogMegaBtn" aria-expanded="false" aria-haspopup="true" aria-controls="catalogMegaPanel" aria-label="Открыть каталог">
-          <span class="btn-catalog-burger" aria-hidden="true"><i class="fa-solid fa-bars"></i></span>
+          <span class="btn-catalog-burger" aria-hidden="true"><svg class="icon-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg></span>
           <span class="btn-catalog-x" aria-hidden="true">×</span>
           Каталог
         </button>
@@ -2368,17 +2764,17 @@
         <div class="header-right">
           <div class="header-actions">
             <button type="button" class="cart-header-btn js-cart-trigger" id="openCartBtn" aria-expanded="false" aria-controls="cartDrawer">
-              <i class="fa-solid fa-cart-shopping" aria-hidden="true"></i>
+              <svg class="icon-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/><path d="M2 4h2l1.5 12h13L21 7H6"/></svg>
               <span class="cart-header-btn-label">Корзина</span>
               <span class="cart-badge js-cart-badge" id="headerCartBadge">0</span>
             </button>
           </div>
           <div class="header-messengers messengers" aria-label="Мессенджеры">
             <a href="https://t.me/stroifast" target="_blank" rel="noopener noreferrer" aria-label="Telegram @stroifast" title="@stroifast">
-              <i class="fa-brands fa-telegram"></i>
+              <svg class="icon-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
             </a>
             <a href="https://wa.me/79834019144" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">
-              <i class="fa-brands fa-whatsapp"></i>
+              <svg class="icon-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.435 9.884-9.881 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg>
             </a>
             <a href="https://max.ru/?phone=79834019144" target="_blank" rel="noopener noreferrer" aria-label="MAX, номер +7 (983) 401-91-44">
               <svg class="icon-max" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="19" height="19" aria-hidden="true">
@@ -2388,18 +2784,18 @@
             </a>
           </div>
           <button type="button" class="nav-toggle" id="navToggle" aria-label="Открыть меню" aria-expanded="false">
-            <i class="fa-solid fa-bars"></i>
+            <svg class="icon-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
           </button>
         </div>
       </div>
       <nav class="nav-desktop header-nav-secondary" aria-label="Основное меню">
-        <a href="#hero">Главная</a>
+        <a href="#main-content">Главная</a>
         <a href="#catalog">Каталог на сайте</a>
         <a href="#services">Сервисы</a>
         <a href="#footer">Контакты</a>
       </nav>
       <nav class="nav-mobile" id="navMobile" aria-label="Мобильное меню">
-        <a href="#hero">Главная</a>
+        <a href="#main-content">Главная</a>
         <a href="#catalog">Каталог на сайте</a>
         <a href="#services">Сервисы</a>
         <a href="#footer">Контакты</a>
@@ -2419,8 +2815,9 @@
     </div>
   </div>
 
-  <main id="hero" class="hero">
+  <main id="main-content" class="hero">
     <div class="container">
+      <p class="hero-kicker">СтройФаст</p>
       <h1>Всё для ремонта с доставкой</h1>
       <p>Смеси, сантехника, электрика и расходники — подберём материалы под задачу. Оплата после согласования, без онлайн-списаний.</p>
       <button type="button" class="btn btn-lg js-open-modal" data-context="Расчёт сметы с героя">
@@ -2432,7 +2829,10 @@
   <section id="catalog" class="section catalog-section">
     <div class="container">
       <div class="section-head">
-        <h2 class="section-title">Каталог</h2>
+        <div class="section-head-text">
+          <p class="section-kicker">Товары</p>
+          <h2 class="section-title">Каталог</h2>
+        </div>
         <div class="filter-row">
           <span class="filter-label">Сортировка:</span>
           <select id="sortSelect" class="sort-select" aria-label="Сортировка товаров">
@@ -2468,6 +2868,7 @@
 
   <section class="section" id="brands">
     <div class="container">
+      <p class="section-kicker">Производители</p>
       <h2 class="section-title">Наши бренды</h2>
       <p class="section-lead">Работаем с проверенными производителями — качество и сертификаты по запросу.</p>
       <div class="brands-grid">
@@ -2488,11 +2889,12 @@
 
   <section class="section" id="delivery">
     <div class="container">
+      <p class="section-kicker">Логистика</p>
       <h2 class="section-title">Доставка</h2>
       <p class="section-lead">Ориентир по доставке с погрузкой и разгрузкой. Точная сумма — после согласования с менеджером.</p>
 
       <div class="delivery-block" id="deliveryBlock">
-        <div class="delivery-icon" aria-hidden="true"><i class="fa-solid fa-truck-ramp-box"></i></div>
+        <div class="delivery-icon" aria-hidden="true"><svg class="icon-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M10 17h4V5H2v12h3"/><path d="M20 17h2v-3.34a1 1 0 0 0-.22-.624l-3.54-4.43A1 1 0 0 0 17.52 8H14"/><path d="M14 17h1"/><circle cx="7.5" cy="17.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></svg></div>
         <h3>Доставка: погрузка и выгрузка</h3>
         <p class="delivery-lead"><strong>Зона:</strong> только Московская область и прилегающие районы. Ориентир считается, если пункты А и Б в этих границах. Уточните остановки и разгрузки по маршруту — учтём в заявке.</p>
         <div class="form-row">
@@ -2538,7 +2940,7 @@
         <button type="button" class="btn" id="delCalcBtn">Рассчитать ориентир доставки</button>
         <div class="delivery-estimate" id="delEstimate" role="status"></div>
         <div class="delivery-actions">
-          <button type="button" class="btn btn-cart" id="delAddCartBtn"><i class="fa-solid fa-cart-plus" aria-hidden="true"></i> В корзину</button>
+          <button type="button" class="btn btn-cart" id="delAddCartBtn"><svg class="icon-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/><path d="M2 4h2l1.5 12H21"/><path d="M6 10h15"/><path d="M11 6v8"/></svg> В корзину</button>
           <button type="button" class="btn btn-ghost js-open-modal" data-context="Заявка: доставка по маршруту">Заявка менеджеру</button>
         </div>
       </div>
@@ -2547,16 +2949,17 @@
 
   <section id="services" class="section">
     <div class="container">
+      <p class="section-kicker">Поддержка</p>
       <h2 class="section-title">Наши сервисы</h2>
       <p class="section-lead">Как у крупных сетей: удобно подъехать, забрать или получить на объекте.</p>
       <div class="services-grid">
         <article class="service-card">
-          <div class="icon" aria-hidden="true"><i class="fa-solid fa-user-tie"></i></div>
+          <div class="icon" aria-hidden="true"><svg class="icon-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.5"/><path d="M6 20v-1a6 6 0 0 1 12 0v1"/><path d="M14 11.5l2 2"/></svg></div>
           <h3>Помощь профессионала</h3>
           <p>Консультируем по технологии и расходу материалов, поможем избежать переделок.</p>
         </article>
         <article class="service-card">
-          <div class="icon" aria-hidden="true"><i class="fa-solid fa-truck-ramp-box"></i></div>
+          <div class="icon" aria-hidden="true"><svg class="icon-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M10 17h4V5H2v12h3"/><path d="M20 17h2v-3.34a1 1 0 0 0-.22-.624l-3.54-4.43A1 1 0 0 0 17.52 8H14"/><path d="M14 17h1"/><circle cx="7.5" cy="17.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></svg></div>
           <h3>Доставка и разгрузка</h3>
           <p>Московская область и прилегающие районы — привезём в удобное окно, поднимем на этаж, условия по договору.</p>
         </article>
@@ -2566,6 +2969,7 @@
 
   <section class="section" id="recommendations">
     <div class="container">
+      <p class="section-kicker">Подборка</p>
       <h2 class="section-title">Вам может понадобиться</h2>
       <p class="section-lead">Популярные позиции для старта ремонта.</p>
       <div class="rec-grid" id="recGrid"></div>
@@ -2584,17 +2988,17 @@
         <div>
           <h3>О компании</h3>
           <ul>
-            <li><a href="#">О СтройФаст</a></li>
-            <li><a href="#">Вакансии</a></li>
-            <li><a href="#">Новости</a></li>
+            <li><a href="#main-content">О СтройФаст</a></li>
+            <li><a href="#footer">Вакансии</a></li>
+            <li><a href="#catalog">Каталог</a></li>
           </ul>
         </div>
         <div>
           <h3>Покупателям</h3>
           <ul>
             <li><a href="#catalog">Как заказать</a></li>
-            <li><a href="#">Оплата и доставка</a></li>
-            <li><a href="#">Возврат</a></li>
+            <li><a href="#delivery">Оплата и доставка</a></li>
+            <li><a href="#services">Возврат и сервис</a></li>
           </ul>
         </div>
         <div>
@@ -2612,13 +3016,13 @@
             <li><span>Московская область и прилегающие районы</span></li>
             <li>
               <a href="https://t.me/stroifast" target="_blank" rel="noopener noreferrer" class="footer-max" title="Telegram @stroifast">
-                <i class="fa-brands fa-telegram footer-contact-icon" aria-hidden="true"></i>
+                <svg class="icon-svg footer-contact-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
                 Telegram · @stroifast
               </a>
             </li>
             <li>
               <a href="https://wa.me/79834019144" target="_blank" rel="noopener noreferrer" class="footer-max">
-                <i class="fa-brands fa-whatsapp footer-contact-icon" aria-hidden="true"></i>
+                <svg class="icon-svg footer-contact-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.435 9.884-9.881 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg>
                 WhatsApp
               </a>
             </li>
@@ -2651,21 +3055,21 @@
       </div>
       <p style="margin:0 0 10px;font-size:13px;color:var(--muted);">Цены ориентировочные. Итог по счёту после согласования.</p>
       <div class="cart-export-row">
-        <button type="button" class="btn" id="exportPdfBtn"><i class="fa-solid fa-file-pdf" aria-hidden="true"></i> Скачать PDF</button>
-        <button type="button" class="btn" id="exportExcelBtn"><i class="fa-solid fa-table" aria-hidden="true"></i> Скачать Excel</button>
+        <button type="button" class="btn" id="exportPdfBtn"><svg class="icon-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M10 12h4"/><path d="M10 16h4"/></svg> Скачать PDF</button>
+        <button type="button" class="btn" id="exportExcelBtn"><svg class="icon-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg> Скачать Excel</button>
       </div>
       <button type="button" class="btn btn-block" id="cartCheckoutBtn">Оформить заявку</button>
     </div>
   </aside>
 
   <button type="button" class="cart-fab js-cart-trigger" id="openCartFab" aria-label="Открыть корзину" aria-expanded="false" aria-controls="cartDrawer">
-    <i class="fa-solid fa-cart-shopping" aria-hidden="true"></i>
+    <svg class="icon-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/><path d="M2 4h2l1.5 12h13L21 7H6"/></svg>
     <span class="cart-badge js-cart-badge" id="cartFabBadge" aria-hidden="true">0</span>
   </button>
 
   <button type="button" class="view-mode-toggle" id="viewModeToggle">Открыть в мобильной версии</button>
 
-  <div class="modal-backdrop" id="modalBackdrop" role="dialog" aria-modal="true" aria-labelledby="modalTitle" hidden>
+  <div class="modal-backdrop" id="modalBackdrop" role="dialog" aria-modal="true" aria-labelledby="modalTitle" aria-hidden="true" hidden>
     <div class="modal" role="document">
       <div class="modal-header">
         <h2 id="modalTitle">Заявка</h2>
@@ -2680,16 +3084,17 @@
         </div>
         <div class="form-row">
           <label for="leadPhone">Телефон</label>
-          <input type="tel" id="leadPhone" name="phone" required autocomplete="tel" placeholder="+7 (983) 401-91-44">
+          <input type="tel" id="leadPhone" name="phone" required autocomplete="tel" inputmode="tel" placeholder="+7 (983) 401-91-44" pattern="[\\+0-9\\s\\-()]*\\d[\\+0-9\\s\\-()]*" title="Минимум 10 цифр в номере">
         </div>
         <div class="form-row">
           <label for="leadComment">Комментарий</label>
-          <textarea id="leadComment" name="comment" placeholder="Объём, адрес, удобное время связи"></textarea>
+          <textarea id="leadComment" name="comment" maxlength="2000" placeholder="Объём, адрес, удобное время связи"></textarea>
         </div>
         <div class="form-row">
           <span id="contactLabel" style="display:block;font-weight:600;margin-bottom:8px;">Связаться через</span>
           <div class="radio-group" role="radiogroup" aria-labelledby="contactLabel">
             <label><input type="radio" name="contact" value="telegram" checked> Telegram</label>
+            <label><input type="radio" name="contact" value="whatsapp"> WhatsApp</label>
             <label><input type="radio" name="contact" value="max"> MAX</label>
             <label><input type="radio" name="contact" value="call"> Звонок</label>
           </div>
@@ -2699,14 +3104,81 @@
     </div>
   </div>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha384-Yv5O+t3uE3hunW8uyrbpPW3iw6/5/Y7HitWJBLgqfMoA36NogMmy+8wWZMpn3HWc" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js" integrity="sha384-vtjasyidUo0kW94K5MXDXntzOJpQgBKXmE7e2Ga4LG0skTTLeBi97eFAXsqewJjw" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <script>
     (function () {
       'use strict';
 
+      var html2pdfLoadPromise = null;
+      var xlsxLoadPromise = null;
+
+      function loadScriptOnce(src, integrity, id) {
+        return new Promise(function (resolve, reject) {
+          if (id && document.getElementById(id)) {
+            resolve();
+            return;
+          }
+          var s = document.createElement('script');
+          if (id) s.id = id;
+          s.src = src;
+          s.crossOrigin = 'anonymous';
+          s.referrerPolicy = 'no-referrer';
+          if (integrity) s.integrity = integrity;
+          s.onload = function () {
+            resolve();
+          };
+          s.onerror = function () {
+            reject(new Error('script_load_failed'));
+          };
+          document.head.appendChild(s);
+        });
+      }
+
+      function ensureHtml2pdf() {
+        if (typeof html2pdf !== 'undefined') return Promise.resolve();
+        if (html2pdfLoadPromise) return html2pdfLoadPromise;
+        html2pdfLoadPromise = loadScriptOnce(
+          'https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js',
+          'sha384-Yv5O+t3uE3hunW8uyrbpPW3iw6/5/Y7HitWJBLgqfMoA36NogMmy+8wWZMpn3HWc',
+          'stroifast-html2pdf'
+        ).catch(function (err) {
+          html2pdfLoadPromise = null;
+          return Promise.reject(err);
+        });
+        return html2pdfLoadPromise;
+      }
+
+      function ensureXlsx() {
+        if (typeof XLSX !== 'undefined') return Promise.resolve();
+        if (xlsxLoadPromise) return xlsxLoadPromise;
+        xlsxLoadPromise = loadScriptOnce(
+          'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js',
+          'sha384-vtjasyidUo0kW94K5MXDXntzOJpQgBKXmE7e2Ga4LG0skTTLeBi97eFAXsqewJjw',
+          'stroifast-xlsx'
+        ).catch(function (err) {
+          xlsxLoadPromise = null;
+          return Promise.reject(err);
+        });
+        return xlsxLoadPromise;
+      }
+
       var CART_STORAGE_KEY = 'stroifast_cart_v2';
+      var CART_BACKUP_KEY = 'stroifast_cart_v2_backup';
+      var CART_SNAP_META_KEY = 'stroifast_cart_v2_saved_at';
       var DELIVERY_CART_PREFIX = 'p_delivery_';
+
+      /** Последнее известное состояние корзины — для повторной записи при выключении / сворачивании вкладки */
+      var cartMirror = null;
+
+      function parseCartObject(raw) {
+        if (!raw || typeof raw !== 'string') return null;
+        try {
+          var o = JSON.parse(raw);
+          if (typeof o !== 'object' || o === null || Array.isArray(o)) return null;
+          return o;
+        } catch (err) {
+          return null;
+        }
+      }
 
       var products = [
         {
@@ -2805,6 +3277,98 @@
         return Math.round(n).toLocaleString('ru-RU') + ' ₽';
       }
 
+      function getPreferredScrollBehavior() {
+        try {
+          if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            return 'auto';
+          }
+        } catch (e) {}
+        return 'smooth';
+      }
+
+      function showToast(message, variant) {
+        if (!message) return;
+        variant = variant || 'info';
+        var stack = document.getElementById('toastStack');
+        if (!stack) return;
+        var el = document.createElement('div');
+        el.className = 'toast toast--' + variant;
+        el.setAttribute('role', variant === 'err' ? 'alert' : 'status');
+        el.textContent = message;
+        stack.appendChild(el);
+        var hideMs = variant === 'err' ? 5600 : 4200;
+        window.setTimeout(function () {
+          el.classList.add('toast--out');
+          window.setTimeout(function () {
+            if (el.parentNode) el.parentNode.removeChild(el);
+          }, 320);
+        }, hideMs);
+      }
+
+      function formatLeadPlainText(p) {
+        var lines = [
+          'Заявка со сайта СтройФаст',
+          'Имя: ' + (p.name || ''),
+          'Телефон: ' + (p.phone || '')
+        ];
+        if (p.context) lines.push('Тема: ' + p.context);
+        if (p.comment) lines.push('Комментарий: ' + p.comment);
+        if (p.contact) {
+          var cl = { telegram: 'Telegram', whatsapp: 'WhatsApp', max: 'MAX', call: 'Звонок' };
+          lines.push('Связь: ' + (cl[p.contact] || p.contact));
+        }
+        return lines.join('\n');
+      }
+
+      function offerLeadFallback(p, opts) {
+        opts = opts || {};
+        var delayMs = typeof opts.delayMs === 'number' ? opts.delayMs : 0;
+        var text = formatLeadPlainText(p);
+        function notify(copied) {
+          showToast(
+            (copied ? 'Текст заявки скопирован. ' : '') +
+              'Напишите в Telegram (@stroifast), в WhatsApp или позвоните +7 (983) 401-91-44.',
+            'info'
+          );
+        }
+        function runNotify(copied) {
+          if (delayMs > 0) window.setTimeout(function () { notify(copied); }, delayMs);
+          else notify(copied);
+        }
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(function () { runNotify(true); }).catch(function () { runNotify(false); });
+        } else {
+          runNotify(false);
+        }
+      }
+
+      function getFocusable(root) {
+        if (!root) return [];
+        var sel =
+          'a[href], button:not([disabled]), input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+        return Array.prototype.slice.call(root.querySelectorAll(sel)).filter(function (el) {
+          var st = window.getComputedStyle(el);
+          return st.visibility !== 'hidden' && st.display !== 'none';
+        });
+      }
+
+      function trapTabKey(e, container) {
+        if (e.key !== 'Tab' || !container) return;
+        var list = getFocusable(container);
+        if (list.length === 0) return;
+        var active = document.activeElement;
+        if (!container.contains(active)) return;
+        var first = list[0];
+        var last = list[list.length - 1];
+        if (e.shiftKey && active === first) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && active === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
+
       var catalogGrid = document.getElementById('catalogGrid');
       var recGrid = document.getElementById('recGrid');
       var chips = document.querySelectorAll('#categoryChips .chip');
@@ -2815,6 +3379,8 @@
       var leadForm = document.getElementById('leadForm');
       var leadContext = document.getElementById('leadContext');
       var leadComment = document.getElementById('leadComment');
+      var modalFocusBefore = null;
+      var cartFocusBefore = null;
       var navToggle = document.getElementById('navToggle');
       var navMobile = document.getElementById('navMobile');
 
@@ -2973,7 +3539,7 @@
           c.classList.toggle('is-active', c.getAttribute('data-category') === 'all');
         });
         var ce = document.getElementById('catalog');
-        if (ce) ce.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        if (ce) ce.scrollIntoView({ behavior: getPreferredScrollBehavior(), block: 'start' });
         applyFilters();
         headerSearchInput.focus();
       }
@@ -3014,16 +3580,45 @@
           }
           var w = window.open(window.location.href, 'stroifast-mobile-preview', 'width=430,height=900,menubar=no,toolbar=no,location=yes,resizable=yes,scrollbars=yes,status=no');
           if (!w) {
-            alert('Браузер заблокировал новое окно. Разрешите всплывающие окна для предпросмотра мобильной версии.');
+            showToast('Браузер заблокировал окно. Разрешите всплывающие окна для предпросмотра мобильной версии.', 'err');
           }
         });
+      }
+
+      function megaIconSvg(key) {
+        var base =
+          '<svg class="icon-svg" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">';
+        var icons = {
+          cubes:
+            base +
+            '<path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><path d="M3.27 6.96L12 12.01l8.73-5.05M12 22.08V12"/></svg>',
+          wrench:
+            base +
+            '<path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 1 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94z"/></svg>',
+          bolt: base + '<path d="M13 2L3 14h8l-1 8 10-12h-8l1-8z"/></svg>',
+          pipe: base + '<path d="M12 22a7 7 0 0 0 7-7c0-5-7-13-7-13S5 10 5 15a7 7 0 0 0 7 7z"/></svg>',
+          roller:
+            base +
+            '<rect x="3" y="3" width="18" height="8" rx="1"/><path d="M7 11v8"/><path d="M17 11v2"/><path d="M7 19h10"/></svg>',
+          bath:
+            base +
+            '<path d="M4 12h16a1 1 0 0 1 1 1v3a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4v-3a1 1 0 0 1 1-1z"/><path d="M6 12V5a2 2 0 0 1 2-2h3v2.5"/><path d="M4 21v-2"/></svg>',
+          anchor:
+            base +
+            '<path d="M12 22V8"/><path d="M5 12H2a10 10 0 0 0 20 0h-3"/><circle cx="12" cy="5" r="3"/></svg>',
+          truck:
+            base +
+            '<path d="M10 17h4V5H2v12h3"/><path d="M20 17h2v-3.34a1 1 0 0 0-.22-.624l-3.54-4.43A1 1 0 0 0 17.52 8H14"/><path d="M14 17h1"/><circle cx="7.5" cy="17.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></svg>',
+          tag: base + '<path d="M12 2H2v10l9.29 9.29a1 1 0 0 0 1.41 0l6.58-6.58a1 1 0 0 0 0-1.41L12 2z"/><path d="M7 7h.01"/></svg>'
+        };
+        return icons[key] || icons.cubes;
       }
 
       var MEGA_CATALOG_ROOT = [
         {
           id: 'materials',
           label: 'Стройматериалы',
-          icon: 'fa-cubes',
+          icon: 'cubes',
           cols: [
             {
               title: 'Сухие строительные смеси',
@@ -3062,7 +3657,7 @@
         {
           id: 'tools',
           label: 'Инструмент',
-          icon: 'fa-screwdriver-wrench',
+          icon: 'wrench',
           cols: [
             {
               title: 'Ручной инструмент',
@@ -3098,7 +3693,7 @@
         {
           id: 'electric',
           label: 'Электрика',
-          icon: 'fa-bolt',
+          icon: 'bolt',
           cols: [
             {
               title: 'Автоматика и учёт',
@@ -3133,7 +3728,7 @@
         {
           id: 'engineering',
           label: 'Инженерные системы',
-          icon: 'fa-faucet-drip',
+          icon: 'pipe',
           cols: [
             {
               title: 'Водоснабжение',
@@ -3166,7 +3761,7 @@
         {
           id: 'finishing',
           label: 'Финишная отделка',
-          icon: 'fa-paint-roller',
+          icon: 'roller',
           cols: [
             {
               title: 'Лакокрасочные материалы',
@@ -3200,7 +3795,7 @@
         {
           id: 'plumbing',
           label: 'Сантехника',
-          icon: 'fa-bath',
+          icon: 'bath',
           cols: [
             {
               title: 'Смесители',
@@ -3233,7 +3828,7 @@
         {
           id: 'fasteners',
           label: 'Крепёж',
-          icon: 'fa-anchor',
+          icon: 'anchor',
           cols: [
             {
               title: 'Метизы',
@@ -3265,8 +3860,8 @@
       ];
 
       var MEGA_CATALOG_FOOTER = [
-        { label: 'Помощь и доставка', icon: 'fa-truck-ramp-box', href: '#services' },
-        { label: 'Новинки', icon: 'fa-tag', href: '#catalog', sortNew: true }
+        { label: 'Помощь и доставка', icon: 'truck', href: '#services' },
+        { label: 'Новинки', icon: 'tag', href: '#catalog', sortNew: true }
       ];
 
       function isCatalogMegaOpen() {
@@ -3359,9 +3954,9 @@
             (i === 0 ? ' is-active' : '') +
             '" data-mega-root="' +
             esc(c.id) +
-            '"><i class="fa-solid ' +
-            esc(c.icon) +
-            '" aria-hidden="true"></i><span>' +
+            '">' +
+            megaIconSvg(c.icon) +
+            '<span>' +
             esc(c.label) +
             '</span></button>';
         }
@@ -3374,9 +3969,8 @@
             esc(F.href) +
             '" class="js-mega-foot"' +
             extra +
-            '><i class="fa-solid ' +
-            esc(F.icon) +
-            '" aria-hidden="true"></i>' +
+            '">' +
+            megaIconSvg(F.icon) +
             esc(F.label) +
             '</a>';
         }
@@ -3423,7 +4017,7 @@
         headerSearchQuery = '';
         if (headerSearchInput) headerSearchInput.value = '';
         var catalogEl = document.getElementById('catalog');
-        if (catalogEl) catalogEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        if (catalogEl) catalogEl.scrollIntoView({ behavior: getPreferredScrollBehavior(), block: 'start' });
 
         if (sortNew && sortSelect) {
           sortSelect.value = 'new';
@@ -3455,21 +4049,49 @@
           if (!raw) {
             var legacy = localStorage.getItem('stroifast_cart_v1');
             if (legacy) {
-              localStorage.setItem(CART_STORAGE_KEY, legacy);
-              raw = legacy;
+              var mig = parseCartObject(legacy);
+              if (mig) {
+                saveCart(mig);
+                return mig;
+              }
+            }
+          } else {
+            var main = parseCartObject(raw);
+            if (main) {
+              cartMirror = main;
+              return main;
             }
           }
-          if (!raw) return {};
-          var o = JSON.parse(raw);
-          if (typeof o !== 'object' || o === null || Array.isArray(o)) return {};
-          return o;
+          var fromBackup = parseCartObject(localStorage.getItem(CART_BACKUP_KEY));
+          if (fromBackup) {
+            saveCart(fromBackup);
+            return fromBackup;
+          }
         } catch (err) {
-          return {};
+          var bu = parseCartObject(localStorage.getItem(CART_BACKUP_KEY));
+          if (bu) {
+            saveCart(bu);
+            return bu;
+          }
         }
+        cartMirror = {};
+        return {};
       }
 
       function saveCart(obj) {
-        localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(obj));
+        if (!obj || typeof obj !== 'object' || Array.isArray(obj)) obj = {};
+        cartMirror = obj;
+        var json = JSON.stringify(obj);
+        try {
+          localStorage.setItem(CART_STORAGE_KEY, json);
+          localStorage.setItem(CART_BACKUP_KEY, json);
+          localStorage.setItem(CART_SNAP_META_KEY, String(Date.now()));
+        } catch (e) {
+          try {
+            localStorage.setItem(CART_BACKUP_KEY, json);
+            localStorage.setItem(CART_SNAP_META_KEY, String(Date.now()));
+          } catch (e2) {}
+        }
       }
 
       function getCartLines() {
@@ -3549,7 +4171,8 @@
         cartCheckoutBtn.disabled = empty;
 
         if (empty) {
-          cartDrawerBody.innerHTML = '<div class="cart-empty">Корзина пока пустая.<br>Добавьте товары из каталога, доставку или блока «Вам может понадобиться».</div>';
+          cartDrawerBody.innerHTML =
+            '<div class="cart-empty"><div class="cart-empty__art" aria-hidden="true"></div><p class="cart-empty__msg">Корзина пока пустая.<br>Добавьте товары из каталога, доставку или блока «Вам может понадобиться».</p></div>';
           return;
         }
 
@@ -3583,6 +4206,49 @@
             '</div>'
           );
         }).join('');
+      }
+
+      function flushCartToStorage() {
+        try {
+          if (cartMirror == null) loadCart();
+          var json = JSON.stringify(cartMirror || {});
+          localStorage.setItem(CART_STORAGE_KEY, json);
+          localStorage.setItem(CART_BACKUP_KEY, json);
+          localStorage.setItem(CART_SNAP_META_KEY, String(Date.now()));
+        } catch (e) {}
+      }
+
+      function requestPersistentCartStorage() {
+        try {
+          if (navigator.storage && navigator.storage.persist) {
+            navigator.storage.persist().catch(function () {});
+          }
+        } catch (e) {}
+      }
+
+      function installCartDurabilityHooks() {
+        function onPageGoingAway() {
+          flushCartToStorage();
+        }
+        document.addEventListener('visibilitychange', function () {
+          if (document.visibilityState === 'hidden') onPageGoingAway();
+        });
+        window.addEventListener('pagehide', onPageGoingAway);
+        window.addEventListener('beforeunload', onPageGoingAway);
+        window.addEventListener('storage', function (e) {
+          if (!e.key || (e.key !== CART_STORAGE_KEY && e.key !== CART_BACKUP_KEY)) return;
+          loadCart();
+          renderCartDrawer();
+        });
+        requestPersistentCartStorage();
+        document.addEventListener(
+          'pointerdown',
+          function persistAfterUserGesture() {
+            requestPersistentCartStorage();
+            document.removeEventListener('pointerdown', persistAfterUserGesture, true);
+          },
+          true
+        );
       }
 
       function addToCart(productId, delta) {
@@ -3663,7 +4329,7 @@
       function addDeliveryLineToCart() {
         var res = computeDeliveryEstimate();
         if (!res.ok) {
-          alert(res.msg);
+          showToast(res.msg, 'err');
           return;
         }
         var cartId = DELIVERY_CART_PREFIX + Date.now();
@@ -3680,6 +4346,7 @@
         saveCart(cart);
         renderCartDrawer();
         openCart();
+        showToast('Доставка добавлена в корзину', 'ok');
       }
 
       function clearCartLine(productId) {
@@ -3691,12 +4358,20 @@
 
       function openCart() {
         closeCatalogMega();
+        cartFocusBefore = document.activeElement;
         cartBackdrop.classList.add('is-open');
         cartDrawer.classList.add('is-open');
         cartDrawer.setAttribute('aria-hidden', 'false');
         setCartExpanded(true);
         document.body.classList.add('cart-open');
         renderCartDrawer();
+        window.requestAnimationFrame(function () {
+          if (closeCartBtn && typeof closeCartBtn.focus === 'function') {
+            try {
+              closeCartBtn.focus();
+            } catch (e) {}
+          }
+        });
       }
 
       function closeCart() {
@@ -3705,6 +4380,15 @@
         cartDrawer.setAttribute('aria-hidden', 'true');
         setCartExpanded(false);
         document.body.classList.remove('cart-open');
+        var refocus = cartFocusBefore;
+        cartFocusBefore = null;
+        window.setTimeout(function () {
+          if (refocus && typeof refocus.focus === 'function') {
+            try {
+              refocus.focus();
+            } catch (e) {}
+          }
+        }, 160);
       }
 
       function getCartSummaryForLead() {
@@ -3868,89 +4552,100 @@
       function exportCartPdf() {
         var lines = getCartLines();
         if (!lines.length) {
-          alert('Корзина пуста — нечего экспортировать.');
+          showToast('Корзина пуста — нечего экспортировать.', 'info');
           return;
         }
-        if (typeof html2pdf === 'undefined') {
-          alert('Библиотека PDF не загрузилась. Проверьте подключение к интернету и обновите страницу.');
-          return;
-        }
-        var total = getCartTotalSum(lines);
-        var overlay = document.createElement('div');
-        overlay.className = 'pdf-export-overlay';
-        overlay.setAttribute('role', 'presentation');
+        ensureHtml2pdf()
+          .then(function () {
+            if (typeof html2pdf === 'undefined') {
+              showToast('PDF не загрузился. Проверьте интернет и обновите страницу.', 'err');
+              return;
+            }
+            var total = getCartTotalSum(lines);
+            var overlay = document.createElement('div');
+            overlay.className = 'pdf-export-overlay';
+            overlay.setAttribute('role', 'presentation');
 
-        var hint = document.createElement('div');
-        hint.className = 'pdf-export-hint';
-        hint.textContent = 'Сохраняем PDF…';
+            var hint = document.createElement('div');
+            hint.className = 'pdf-export-hint';
+            hint.textContent = 'Сохраняем PDF…';
 
-        var host = document.createElement('div');
-        host.className = 'pdf-gen-host';
-        host.setAttribute('aria-hidden', 'true');
-        host.innerHTML = buildPdfTableHtml(lines, total);
-        overlay.appendChild(hint);
-        overlay.appendChild(host);
+            var host = document.createElement('div');
+            host.className = 'pdf-gen-host';
+            host.setAttribute('aria-hidden', 'true');
+            host.innerHTML = buildPdfTableHtml(lines, total);
+            overlay.appendChild(hint);
+            overlay.appendChild(host);
 
-        var prevOverflow = document.body.style.overflow;
-        document.body.style.overflow = 'hidden';
-        document.body.appendChild(overlay);
+            var prevOverflow = document.body.style.overflow;
+            document.body.style.overflow = 'hidden';
+            document.body.appendChild(overlay);
 
-        function cleanup() {
-          document.body.style.overflow = prevOverflow;
-          if (overlay.parentNode) overlay.parentNode.removeChild(overlay);
-        }
+            function cleanup() {
+              document.body.style.overflow = prevOverflow;
+              if (overlay.parentNode) overlay.parentNode.removeChild(overlay);
+            }
 
-        var isCoarse = typeof window.matchMedia === 'function' && window.matchMedia('(pointer: coarse)').matches;
-        var scale = isCoarse ? Math.min(2, window.devicePixelRatio || 2) : 2;
+            var isCoarse = typeof window.matchMedia === 'function' && window.matchMedia('(pointer: coarse)').matches;
+            var scale = isCoarse ? Math.min(2, window.devicePixelRatio || 2) : 2;
 
-        var opt = {
-          margin: 12,
-          filename: getCartExportFileBasename() + '.pdf',
-          image: { type: 'jpeg', quality: 0.95 },
-          html2canvas: {
-            scale: scale,
-            useCORS: true,
-            logging: false,
-            scrollX: 0,
-            scrollY: 0,
-            backgroundColor: '#ffffff',
-            foreignObjectRendering: false
-          },
-          jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-          pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
-        };
+            var opt = {
+              margin: 12,
+              filename: getCartExportFileBasename() + '.pdf',
+              image: { type: 'jpeg', quality: 0.95 },
+              html2canvas: {
+                scale: scale,
+                useCORS: true,
+                logging: false,
+                scrollX: 0,
+                scrollY: 0,
+                backgroundColor: '#ffffff',
+                foreignObjectRendering: false
+              },
+              jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+              pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
+            };
 
-        var delayMs = isCoarse ? 200 : 80;
+            var delayMs = isCoarse ? 200 : 80;
 
-        requestAnimationFrame(function () {
-          requestAnimationFrame(function () {
-            setTimeout(function () {
-              html2pdf()
-                .set(opt)
-                .from(host)
-                .save()
-                .then(cleanup)
-                .catch(function (err) {
-                  cleanup();
-                  console.error(err);
-                  alert('Не удалось сформировать PDF. Попробуйте ещё раз.');
-                });
-            }, delayMs);
+            requestAnimationFrame(function () {
+              requestAnimationFrame(function () {
+                setTimeout(function () {
+                  html2pdf()
+                    .set(opt)
+                    .from(host)
+                    .save()
+                    .then(function () {
+                      cleanup();
+                      showToast('PDF сохранён', 'ok');
+                    })
+                    .catch(function (err) {
+                      cleanup();
+                      console.error(err);
+                      showToast('Не удалось сформировать PDF. Попробуйте ещё раз.', 'err');
+                    });
+                }, delayMs);
+              });
+            });
+          })
+          .catch(function () {
+            showToast('Не удалось загрузить модуль PDF. Проверьте сеть и обновите страницу.', 'err');
           });
-        });
       }
 
       function exportCartXlsx() {
         var lines = getCartLines();
         if (!lines.length) {
-          alert('Корзина пуста — нечего экспортировать.');
+          showToast('Корзина пуста — нечего экспортировать.', 'info');
           return;
         }
-        if (typeof XLSX === 'undefined') {
-          alert('Библиотека Excel не загрузилась. Проверьте подключение к интернету и обновите страницу.');
-          return;
-        }
-        var totalSum = getCartTotalSum(lines);
+        ensureXlsx()
+          .then(function () {
+            if (typeof XLSX === 'undefined') {
+              showToast('Excel не загрузился. Проверьте интернет и обновите страницу.', 'err');
+              return;
+            }
+            var totalSum = getCartTotalSum(lines);
         var totalRounded = Math.round(totalSum);
         var d = new Date();
 
@@ -4034,9 +4729,14 @@
           { wch: 14 }
         ];
 
-        var wb = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, ws, 'Товарный чек');
-        XLSX.writeFile(wb, getCartExportFileBasename() + '.xlsx');
+            var wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, 'Товарный чек');
+            XLSX.writeFile(wb, getCartExportFileBasename() + '.xlsx');
+            showToast('Excel сохранён', 'ok');
+          })
+          .catch(function () {
+            showToast('Не удалось загрузить модуль Excel. Проверьте сеть и обновите страницу.', 'err');
+          });
       }
 
       function bindTap(el, handler) {
@@ -4102,11 +4802,30 @@
         return d.innerHTML;
       }
 
+      function safeImageUrl(url) {
+        if (url == null || typeof url !== 'string') return '';
+        var u = url.trim();
+        if (/^https:\/\//i.test(u)) return u;
+        if (/^\//.test(u)) return u;
+        if (/:/.test(u)) return '';
+        return u;
+      }
+
+      var svgCartPlusBtn =
+        '<svg class="icon-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/><path d="M2 4h2l1.5 12H21"/><path d="M6 10h15"/><path d="M11 6v8"/></svg>';
+
+      var svgStockIn =
+        '<svg class="icon-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg>';
+
+      var svgStockOrder =
+        '<svg class="icon-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>';
+
       function productCardHtml(p) {
         var stockClass = p.stock === 'in' ? 'in-stock' : 'on-order';
         var stockText = p.stock === 'in' ? 'В наличии' : 'Под заказ';
-        var stockIcon = p.stock === 'in' ? 'fa-circle-check' : 'fa-clock';
-        var imgSrc = p.image ? esc(p.image) : '';
+        var stockSvg = p.stock === 'in' ? svgStockIn : svgStockOrder;
+        var rawImg = safeImageUrl(p.image);
+        var imgSrc = rawImg ? esc(rawImg) : '';
         var imgAlt = esc(p.brand + ' ' + p.title);
         var mediaHtml = imgSrc
           ? '<div class="product-media"><img src="' + imgSrc + '" alt="' + imgAlt + '" width="400" height="400" loading="lazy" decoding="async"></div>'
@@ -4118,38 +4837,39 @@
             '<h3 class="product-title">' + esc(p.title) + '</h3>' +
             '<p class="product-desc">' + esc(p.desc) + '</p>' +
             '<div class="product-stock ' + stockClass + '">' +
-              '<i class="fa-solid ' + stockIcon + '" aria-hidden="true"></i> ' + stockText +
+              stockSvg + ' ' + stockText +
             '</div>' +
             '<p class="product-price">' + formatMoney(p.price) + ' <small>за шт.</small></p>' +
             '<div class="product-actions">' +
-            '<button type="button" class="btn btn-block btn-cart js-add-cart" data-product-id="' + esc(p.id) + '"><i class="fa-solid fa-cart-plus" aria-hidden="true"></i> В корзину</button>' +
+            '<button type="button" class="btn btn-block btn-cart js-add-cart" data-product-id="' + esc(p.id) + '">' + svgCartPlusBtn + ' В корзину</button>' +
             '<button type="button" class="btn btn-block btn-ghost js-open-modal" data-product="' + esc(p.brand + ' — ' + p.title) + '">Заявка</button>' +
             '</div>' +
           '</article>'
         );
       }
 
-    function recCardHtml(p) {
-      var imgSrc = p.image ? esc(p.image) : '';
-      var imgAlt = esc(p.brand + ' ' + p.title);
-      var mediaHtml = imgSrc
-        ? '<div class="rec-media"><img src="' + imgSrc + '" alt="' + imgAlt + '" width="400" height="300" loading="lazy" decoding="async"></div>'
-        : '';
-      return (
-        '<article class="rec-card" data-product-id="' + esc(p.id) + '">' +
-          mediaHtml +
-          '<h3>' + esc(p.brand + ' · ' + p.title) + '</h3>' +
-          '<p>' + esc(p.desc) + '</p>' +
-          '<p class="rec-price">' + formatMoney(p.price) + '</p>' +
-          '<div class="product-actions">' +
-          '<button type="button" class="btn btn-block btn-cart js-add-cart" data-product-id="' + esc(p.id) + '"><i class="fa-solid fa-cart-plus" aria-hidden="true"></i> В корзину</button>' +
-          '<button type="button" class="btn btn-block btn-ghost js-open-modal" data-product="' + esc(p.brand + ' — ' + p.title) + '">Заказать</button>' +
-          '</div>' +
-        '</article>'
-      );
-    }
+      function recCardHtml(p) {
+        var rawImg = safeImageUrl(p.image);
+        var imgSrc = rawImg ? esc(rawImg) : '';
+        var imgAlt = esc(p.brand + ' ' + p.title);
+        var mediaHtml = imgSrc
+          ? '<div class="rec-media"><img src="' + imgSrc + '" alt="' + imgAlt + '" width="400" height="300" loading="lazy" decoding="async"></div>'
+          : '';
+        return (
+          '<article class="rec-card" data-product-id="' + esc(p.id) + '">' +
+            mediaHtml +
+            '<h3>' + esc(p.brand + ' · ' + p.title) + '</h3>' +
+            '<p>' + esc(p.desc) + '</p>' +
+            '<p class="rec-price">' + formatMoney(p.price) + '</p>' +
+            '<div class="product-actions">' +
+            '<button type="button" class="btn btn-block btn-cart js-add-cart" data-product-id="' + esc(p.id) + '">' + svgCartPlusBtn + ' В корзину</button>' +
+            '<button type="button" class="btn btn-block btn-ghost js-open-modal" data-product="' + esc(p.brand + ' — ' + p.title) + '">Заказать</button>' +
+            '</div>' +
+          '</article>'
+        );
+      }
 
-    function renderCatalog(order) {
+      function renderCatalog(order) {
       if (!catalogGrid) return;
       var list = products.slice();
       if (order === 'alpha') {
@@ -4199,6 +4919,7 @@
 
     function openModal(opts) {
       opts = opts || {};
+      modalFocusBefore = document.activeElement;
       closeCatalogMega();
       closeCart();
       leadContext.value = opts.context || '';
@@ -4210,16 +4931,32 @@
         leadComment.value = '';
       }
       modalBackdrop.hidden = false;
+      modalBackdrop.setAttribute('aria-hidden', 'false');
       modalBackdrop.classList.add('is-open');
       document.body.classList.add('modal-open');
-      document.getElementById('leadName').focus();
+      window.requestAnimationFrame(function () {
+        var n = document.getElementById('leadName');
+        if (n && typeof n.focus === 'function') {
+          try {
+            n.focus();
+          } catch (e) {}
+        }
+      });
     }
 
     function closeModal() {
       modalBackdrop.classList.remove('is-open');
       document.body.classList.remove('modal-open');
+      var refocus = modalFocusBefore;
+      modalFocusBefore = null;
       setTimeout(function () {
         modalBackdrop.hidden = true;
+        modalBackdrop.setAttribute('aria-hidden', 'true');
+        if (refocus && typeof refocus.focus === 'function') {
+          try {
+            refocus.focus();
+          } catch (e) {}
+        }
       }, 200);
     }
 
@@ -4265,20 +5002,30 @@
     }
 
     document.addEventListener('keydown', function (e) {
-      if (e.key !== 'Escape') return;
+      if (e.key === 'Escape') {
+        if (modalBackdrop && modalBackdrop.classList.contains('is-open')) {
+          closeModal();
+          return;
+        }
+        if (isCatalogMegaOpen()) {
+          closeCatalogMega();
+          return;
+        }
+        if (cartDrawer && cartDrawer.classList.contains('is-open')) closeCart();
+        return;
+      }
       if (modalBackdrop && modalBackdrop.classList.contains('is-open')) {
-        closeModal();
+        trapTabKey(e, modalBackdrop);
         return;
       }
-      if (isCatalogMegaOpen()) {
-        closeCatalogMega();
-        return;
+      if (cartDrawer && cartDrawer.classList.contains('is-open')) {
+        trapTabKey(e, cartDrawer);
       }
-      if (cartDrawer && cartDrawer.classList.contains('is-open')) closeCart();
     });
 
     if (leadForm) leadForm.addEventListener('submit', function (e) {
       e.preventDefault();
+      if (typeof leadForm.reportValidity === 'function' && !leadForm.reportValidity()) return;
       var submitBtn = leadForm.querySelector('button[type="submit"]');
       var prevText = submitBtn ? submitBtn.textContent : '';
       var fd = new FormData(leadForm);
@@ -4290,6 +5037,20 @@
         contact: String(fd.get('contact') || '').trim(),
         website: String(fd.get('website') || '').trim()
       };
+      payload.comment = payload.comment.slice(0, 2000);
+      payload.context = payload.context.slice(0, 500);
+      payload.contact = payload.contact.slice(0, 80);
+      if (!payload.name) {
+        showToast('Укажите имя.', 'err');
+        return;
+      }
+      var phoneDigits = payload.phone.replace(/\D/g, '');
+      if (phoneDigits.length < 10) {
+        showToast('В телефоне должно быть не меньше 10 цифр.', 'err');
+        var ph = document.getElementById('leadPhone');
+        if (ph && typeof ph.focus === 'function') ph.focus();
+        return;
+      }
       if (submitBtn) {
         submitBtn.disabled = true;
         submitBtn.textContent = 'Отправка…';
@@ -4300,7 +5061,11 @@
         body: JSON.stringify(payload)
       })
         .then(function (r) {
-          return r.json().then(function (j) {
+          return r.text().then(function (t) {
+            var j = null;
+            try {
+              j = t ? JSON.parse(t) : null;
+            } catch (e) {}
             return { okHttp: r.ok, j: j };
           });
         })
@@ -4310,7 +5075,7 @@
             submitBtn.textContent = prevText;
           }
           if (x.okHttp && x.j && x.j.ok) {
-            alert('Заявка отправлена. Свяжемся в течение часа');
+            showToast('Заявка отправлена. Свяжемся в течение часа.', 'ok');
             leadForm.reset();
             closeModal();
             return;
@@ -4319,17 +5084,35 @@
           var msg;
           if (err === 'invalid_name') msg = 'Укажите имя.';
           else if (err === 'invalid_phone') msg = 'Укажите корректный телефон.';
-          else if (err === 'config_missing' || err === 'telegram_not_configured') {
-            msg = 'Отправка заявок временно недоступна. Позвоните нам или напишите в мессенджер.';
-          } else msg = 'Не удалось отправить заявку. Попробуйте позже или позвоните нам.';
-          alert(msg);
+          else if (err === 'invalid_comment' || err === 'invalid_context' || err === 'invalid_contact') {
+            msg = 'Слишком длинный текст в заявке. Сократите комментарий или тему.';
+          } else if (err === 'payload_too_large') {
+            msg = 'Слишком большой запрос. Сократите текст и попробуйте снова.';
+          } else if (err === 'rate_limited') {
+            msg = 'Слишком частые отправки. Подождите несколько минут.';
+          } else if (err === 'config_missing' || err === 'telegram_not_configured') {
+            msg = 'Отправка на сервер недоступна.';
+          } else if (err === 'telegram_send_failed') {
+            msg = 'Сервер не смог доставить заявку в Telegram.';
+          } else msg = 'Не удалось отправить заявку через сайт.';
+          showToast(msg, 'err');
+          var noLeadFallback =
+            err === 'invalid_name' ||
+            err === 'invalid_phone' ||
+            err === 'invalid_comment' ||
+            err === 'invalid_context' ||
+            err === 'invalid_contact' ||
+            err === 'payload_too_large' ||
+            err === 'rate_limited';
+          if (!noLeadFallback) offerLeadFallback(payload, { delayMs: 420 });
         })
         .catch(function () {
           if (submitBtn) {
             submitBtn.disabled = false;
             submitBtn.textContent = prevText;
           }
-          alert('Нет связи с сервером. Проверьте интернет или откройте сайт по адресу хостинга (нужен PHP).');
+          showToast('Нет ответа от сервера (часто так на статическом хостинге без PHP).', 'err');
+          offerLeadFallback(payload, { delayMs: 420 });
         });
     });
 
@@ -4384,7 +5167,7 @@
         headerSearchQuery = headerSearchInput ? headerSearchInput.value.trim().toLowerCase() : '';
         closeCatalogMega();
         var ce = document.getElementById('catalog');
-        if (ce) ce.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        if (ce) ce.scrollIntoView({ behavior: getPreferredScrollBehavior(), block: 'start' });
         chips.forEach(function (c) {
           c.classList.toggle('is-active', c.getAttribute('data-category') === 'all');
         });
@@ -4465,6 +5248,7 @@
     else if (catalogGrid) renderCatalog('alpha');
     renderRecs();
     bindModalTriggers();
+    installCartDurabilityHooks();
     renderCartDrawer();
     })();
   </script>
