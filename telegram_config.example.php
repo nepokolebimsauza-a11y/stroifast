@@ -5,5 +5,5 @@
  */
 return [
     'bot_token' => '000000000:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA',
-    'chat_id' => '000000000',
+    'chat_id' => '1859327629',
 ];

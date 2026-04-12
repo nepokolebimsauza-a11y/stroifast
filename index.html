@@ -2918,6 +2918,10 @@
   </style>
 </head>
 <body class="header-with-mega">
+  <!-- Заявки с GitHub Pages: поднимите lead-server на ПК + HTTPS-туннель (ngrok / cloudflared),
+       затем раскомментируйте и подставьте полный URL (должен совпадать с ALLOWED_ORIGINS на сервере):
+  <script>window.STROIFAST_LEAD_URL = 'https://ВАШ-ТУННЕЛЬ/lead';</script>
+  -->
   <a href="#main-content" class="skip-link visually-hidden-focus">К основному содержимому</a>
   <div id="toastStack" class="toast-stack" aria-live="polite" aria-relevant="additions text"></div>
   <div class="top-bar">
@@ -5313,7 +5317,11 @@
         submitBtn.disabled = true;
         submitBtn.textContent = 'Отправка…';
       }
-      fetch('telegram_notify.php', {
+      var leadNotifyUrl =
+        typeof window !== 'undefined' && window.STROIFAST_LEAD_URL
+          ? String(window.STROIFAST_LEAD_URL)
+          : 'telegram_notify.php';
+      fetch(leadNotifyUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)

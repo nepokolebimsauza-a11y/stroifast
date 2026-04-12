@@ -1,0 +1,1137 @@
+{
+  "name": "DeepSeek: Sora→YouTube + Kling→TikTok (unified)",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 */6 * * *"
+            }
+          ]
+        }
+      },
+      "id": "56487788-3f40-4ec8-9fcd-e1bf4015d920",
+      "name": "Every 6 hours",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [-1120, -48]
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1N5IbSUUNUoN1X9tLN-0-MzHi9xL0yUM7k7i1ZklK668",
+          "mode": "list",
+          "cachedResultName": "Чтение",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1N5IbSUUNUoN1X9tLN-0-MzHi9xL0yUM7k7i1ZklK668/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Лист1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1N5IbSUUNUoN1X9tLN-0-MzHi9xL0yUM7k7i1ZklK668/edit#gid=0"
+        },
+        "options": {}
+      },
+      "id": "45c9a543-8a5b-4c75-917e-8e80391b77dd",
+      "name": "Google Sheets - read series log",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [-1008, 80],
+      "alwaysOutputData": true,
+      "notesInFlow": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "sbEr5KyqFvzkdh05",
+          "name": "Google Sheets OAuth2 API"
+        }
+      },
+      "notes": "Space/Sora серия. Подключи OAuth2. Лист только для космического сериала."
+    },
+    {
+      "parameters": {
+        "jsCode": "const rows = $input.all();\nlet previous_prompt = '';\nif (rows.length > 0) {\n  const last = rows[rows.length - 1].json;\n  previous_prompt = String(last.sora_prompt ?? '').trim();\n}\n\nconst system = 'You write ONE English prompt for an AI text-to-video model (Sora-style). Output ONLY the prompt text: no title line, no quotes, no markdown, no bullet list. The scene must work in vertical 9:16. Prefer 8-15 seconds of strong visuals. Vivid and cinematic but safe: no real celebrities or trademarks, no gore or adult content. SERIES FORMAT: This is the next episode of ONE ongoing astrocosmic science-fiction serial—deep space, megastructures, nebulae, cosmic phenomena, spacecraft or suited explorers, extreme scale, awe with light peril. Every prompt must OPEN as a direct continuation of the PREVIOUS episode final beat (same mission thread, same ship or outpost when possible—the first shot or action logically follows what viewers would have seen at the end of the last Short). Do not reset to unrelated random space scenery. If there is no previous prompt yet, treat this as the series opening. CLOSE the described moment on a transition or soft cliffhanger the next run can pick up (hatch, approaching structure, flare, jump cue). Keep loose recurring visual language (palette, craft or silhouette hints) so episodes feel like one show.';\n\nconst user = previous_prompt\n  ? ('Previous episode Sora prompt (your new prompt must OPEN as direct continuation of how this ends):\\n\\n' + previous_prompt + '\\n\\nWrite the English Sora prompt for the NEXT episode only. Same astrocosmic serial thread; vary celestial details, lighting, and camera movement without breaking continuity. Output only the prompt text.')\n  : ('The Google Sheet has no logged episode yet. Write the English Sora prompt for the FIRST episode of the astrocosmic serial: strong establishing shot, hook, vertical 9:16, 8–15 seconds of visuals. Output only the prompt text.');\n\nreturn [{ json: { previous_prompt, deepseekBody: {\n  model: 'deepseek-chat',\n  temperature: 0.9,\n  max_tokens: 500,\n  messages: [\n    { role: 'system', content: system },\n    { role: 'user', content: user }\n  ]\n}}}];"
+      },
+      "id": "ca6d72e6-339b-4868-88e0-0ac856cca6dd",
+      "name": "Build DeepSeek context",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [-896, -48]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.deepseek.com/chat/completions",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "deepSeekApi",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json.deepseekBody) }}",
+        "options": {}
+      },
+      "id": "11813d22-acca-4132-9785-7fa9dd156a0d",
+      "name": "DeepSeek - prompt for Short",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [-784, 80],
+      "notesInFlow": true,
+      "credentials": {
+        "deepSeekApi": {
+          "id": "jdKb1KUCA3uEiD7m",
+          "name": "DeepSeek account 3"
+        }
+      },
+      "notes": "Credential: Header Auth. Authorization: Bearer YOUR_DEEPSEEK_KEY"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "prompt",
+              "name": "prompt",
+              "value": "={{ ($json.choices && $json.choices[0] && $json.choices[0].message && $json.choices[0].message.content) ? String($json.choices[0].message.content).trim() : \"\" }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "c879b4af-3032-40b1-8c7e-371d9568a356",
+      "name": "Extract Sora prompt",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [-672, -48]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://queue.fal.run/fal-ai/sora-2/text-to-video",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ prompt: $json.prompt, aspect_ratio: '9:16', resolution: '720p', duration: 8, delete_video: false }) }}",
+        "options": {}
+      },
+      "id": "21c6f9aa-08ee-4e46-92c7-f573852636b6",
+      "name": "Fal - submit Sora 2",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [-448, 80],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "GgmEC0NWoq9vdPAJ",
+          "name": "Header Auth account 2"
+        }
+      },
+      "notes": "Credential: Header Auth. Authorization: Key YOUR_FAL_KEY"
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.videoUrl }}",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file"
+            }
+          }
+        }
+      },
+      "id": "58ceb7db-3a08-4700-b1ae-e0854520cbff",
+      "name": "Download MP4",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [896, 80]
+    },
+    {
+      "parameters": {
+        "resource": "video",
+        "operation": "upload",
+        "title": "={{ $('Extract Sora prompt').item.json.prompt.slice(0, 80) }}",
+        "regionCode": "US",
+        "categoryId": "22",
+        "options": {
+          "description": "={{ $('Extract Sora prompt').item.json.prompt }}\n",
+          "embeddable": true,
+          "notifySubscribers": true,
+          "privacyStatus": "public",
+          "tags": "Shorts, Money, Space, Ocean, Cats, Dogs"
+        }
+      },
+      "id": "4667a765-fc9d-4e69-80c3-9cdeeb0096ee",
+      "name": "YouTube - upload Short",
+      "type": "n8n-nodes-base.youTube",
+      "typeVersion": 1,
+      "position": [1120, 80],
+      "credentials": {
+        "youTubeOAuth2Api": {
+          "id": "C29BMf44fPatLak8",
+          "name": "YouTube account 3"
+        }
+      },
+      "notes": "Set privacyStatus to public when ready. YouTube OAuth2 credential."
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "s1",
+              "name": "generated_at",
+              "value": "={{ $now.toISO() }}",
+              "type": "string"
+            },
+            {
+              "id": "s2",
+              "name": "sora_prompt",
+              "value": "={{ $('Extract Sora prompt').item.json.prompt }}",
+              "type": "string"
+            },
+            {
+              "id": "s3",
+              "name": "youtube_video_id",
+              "value": "={{ $json.id }}",
+              "type": "string"
+            },
+            {
+              "id": "s4",
+              "name": "youtube_url",
+              "value": "={{ 'https://www.youtube.com/watch?v=' + $json.id }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "617f821c-cd77-43bd-be75-be9ecd95fd42",
+      "name": "Prepare row for Sheets log",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [1232, -64]
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1N5IbSUUNUoN1X9tLN-0-MzHi9xL0yUM7k7i1ZklK668",
+          "mode": "list",
+          "cachedResultName": "Чтение",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1N5IbSUUNUoN1X9tLN-0-MzHi9xL0yUM7k7i1ZklK668/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Лист1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1N5IbSUUNUoN1X9tLN-0-MzHi9xL0yUM7k7i1ZklK668/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "id": "={{ $json.generated_at }}",
+            "topic": "=\t {{ $json.sora_prompt }}",
+            "ready_for_reuse": "={{ $json.youtube_video_id }}",
+            "reuse_count": "={{ $json.youtube_url }}"
+          },
+          "matchingColumns": ["id"],
+          "schema": [
+            {
+              "id": "topic",
+              "displayName": "topic",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "ready_for_reuse",
+              "displayName": "ready_for_reuse",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "reuse_count",
+              "displayName": "reuse_count",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "ai1_response_text",
+              "displayName": "ai1_response_text",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "994b8a2e-b9d7-47a6-9d8b-5c2a8650775c",
+      "name": "Google Sheets - append episode",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [1344, 80],
+      "notesInFlow": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "sbEr5KyqFvzkdh05",
+          "name": "Google Sheets OAuth2 API"
+        }
+      },
+      "notes": "Лог Space/Sora. Тот же документ/лист, что в чтении серии."
+    },
+    {
+      "parameters": { "amount": 15 },
+      "id": "3e41eea3-9ca3-4d0a-8930-16de67ef9be6",
+      "name": "Wait for video processing",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [-224, 80],
+      "webhookId": "146d58cb-f171-4a82-8fd5-83574730b80e"
+    },
+    {
+      "parameters": {
+        "url": "={{ $('Fal - submit Sora 2').item.json.status_url }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {}
+      },
+      "id": "8f0a27b1-b73a-48cd-8baf-525586f1132a",
+      "name": "Fal - check status",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [0, -32],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "GgmEC0NWoq9vdPAJ",
+          "name": "Header Auth account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": false,
+            "leftValue": "",
+            "typeValidation": "loose"
+          },
+          "conditions": [
+            {
+              "id": "id-1",
+              "leftValue": "={{ $json.status }}",
+              "rightValue": "COMPLETED",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "c9111623-aaeb-47b9-ad56-ceaa81408855",
+      "name": "Check if completed",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [224, 80]
+    },
+    {
+      "parameters": {
+        "url": "={{ $('Fal - submit Sora 2').item.json.response_url }}",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "httpHeaderAuth",
+        "options": {}
+      },
+      "id": "a7866af3-6e5c-4c6c-9a83-e37187955dd3",
+      "name": "Fal - get result",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [448, 80],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "GgmEC0NWoq9vdPAJ",
+          "name": "Header Auth account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "id-1",
+              "name": "videoUrl",
+              "value": "={{ $json.video.url }}",
+              "type": "string"
+            },
+            {
+              "id": "id-2",
+              "name": "youtubeTitle",
+              "value": "={{ $('Extract Sora prompt').item.json.prompt.slice(0, 80) }}",
+              "type": "string"
+            },
+            {
+              "id": "id-3",
+              "name": "youtubeDescription",
+              "value": "={{ $('Extract Sora prompt').item.json.prompt }}\n\n#Shorts",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "5b658806-957f-4c67-a72c-b599a326eb4f",
+      "name": "Prepare video data",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [672, 80]
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1N5IbSUUNUoN1X9tLN-0-MzHi9xL0yUM7k7i1ZklK668",
+          "mode": "list",
+          "cachedResultName": "KidsLog",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1N5IbSUUNUoN1X9tLN-0-MzHi9xL0yUM7k7i1ZklK668/edit#gid=0"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Kids (замени gid)",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1N5IbSUUNUoN1X9tLN-0-MzHi9xL0yUM7k7i1ZklK668/edit#gid=0"
+        },
+        "options": {}
+      },
+      "id": "b2a10001-0001-4001-8001-000000000001",
+      "name": "Google Sheets - read kids series log",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [-1008, 520],
+      "alwaysOutputData": true,
+      "notesInFlow": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "sbEr5KyqFvzkdh05",
+          "name": "Google Sheets OAuth2 API"
+        }
+      },
+      "notes": "ОБЯЗАТЕЛЬНО: отдельный лист или таблица для детского сериала. Колонка с последним промптом: kling_prompt (или video_prompt). Не смешивать с Space-листом."
+    },
+    {
+      "parameters": {
+        "jsCode": "const rows = $input.all();\nlet previous_prompt = '';\nif (rows.length > 0) {\n  const last = rows[rows.length - 1].json;\n  previous_prompt = String(last.kling_prompt ?? last.video_prompt ?? '').trim();\n}\nconst nextEpisode = rows.length + 1;\n\nconst system = [\n  'You produce ONE response for the NEXT episode of a single ongoing English-only kids educational cartoon web series: counting rhymes, gentle lessons, harmless colorful preschool content.',\n  'OUTPUT FORMAT — use exactly these three labels in order. No text before TITLE:.',\n  'TITLE: one line, catchy kid-friendly episode title in English.',\n  'DESCRIPTION: one or two short friendly English sentences for a social caption (brief, warm).',\n  'VIDEO_PROMPT: one continuous English paragraph for the text-to-video model only (no extra labels inside this paragraph).',\n  '',\n  'VIDEO_PROMPT rules: Vertical 9:16. One continuous clip designed for about 15 seconds of story (the API may cap length). English only for all spoken dialogue, sung lines, and on-screen text.',\n  'Audio is mandatory: include soft upbeat child-safe background music AND clear English voiceover — warm, soft, calm, playful, preschool-teacher tone; slow, clear pacing; gentle enthusiasm.',\n  'Visuals must include a readable lower-third kids-style banner showing the exact text Episode ' + nextEpisode + ' (use this exact episode number) in a large friendly font, high contrast, not blocking the main characters.',\n  'Safe for kids: no real brands, no celebrities, no scary or adult themes, no violence. Friendly 2D or soft 3D cartoon look, bright cozy lighting.',\n  'SERIES CONTINUITY: the new scene must OPEN as a direct continuation of the previous episode final beat (same characters and setting when possible). If there is no previous prompt yet, make a gentle series premiere with a clear hook.',\n  'End on a soft beat the next episode can continue (small question, next object to count, friendly transition).'\n].join(' ');\n\nconst user = previous_prompt\n  ? ('Episode number for the on-screen banner (fixed): ' + nextEpisode + '.\\n\\nPrevious episode VIDEO_PROMPT (continue from how this ends — same show):\\n\\n' + previous_prompt + '\\n\\nWrite TITLE, DESCRIPTION, and VIDEO_PROMPT for the NEXT episode only. All user-facing words in English.')\n  : ('Episode number for the on-screen banner (fixed): ' + nextEpisode + '.\\nNo prior episode in the sheet — write TITLE, DESCRIPTION, and VIDEO_PROMPT for the FIRST (pilot) episode: establish world and recurring characters, gentle hook. All user-facing words in English.');\n\nreturn [{ json: { previous_prompt, nextEpisode, deepseekBody: {\n  model: 'deepseek-chat',\n  temperature: 0.85,\n  max_tokens: 900,\n  messages: [\n    { role: 'system', content: system },\n    { role: 'user', content: user }\n  ]\n}}}];"
+      },
+      "id": "b2a10001-0001-4001-8001-000000000002",
+      "name": "Build DeepSeek context (Kids)",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [-896, 520]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.deepseek.com/chat/completions",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "deepSeekApi",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json.deepseekBody) }}",
+        "options": {}
+      },
+      "id": "b2a10001-0001-4001-8001-000000000003",
+      "name": "DeepSeek - Kids titles + Kling prompt",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [-784, 520],
+      "credentials": {
+        "deepSeekApi": {
+          "id": "jdKb1KUCA3uEiD7m",
+          "name": "DeepSeek account 3"
+        }
+      },
+      "notes": "Тот же DeepSeek credential, что и для Space-ветки."
+    },
+    {
+      "parameters": {
+        "jsCode": "const raw = $input.first().json.choices?.[0]?.message?.content;\nconst text = String(raw ?? '').trim();\nfunction grab(label) {\n  const re = new RegExp(label + ':\\\\s*([\\\\s\\\\S]*?)(?=\\\\n[A-Z_]+:|$)', 'i');\n  const m = text.match(re);\n  return m ? m[1].trim() : '';\n}\nlet title = grab('TITLE');\nlet description = grab('DESCRIPTION');\nlet video_prompt = grab('VIDEO_PROMPT');\nif (!video_prompt) {\n  video_prompt = text;\n}\nif (!title) {\n  title = 'Learning Friends';\n}\nif (!description) {\n  description = 'A cozy English counting moment for little learners.';\n}\nreturn [{ json: { title, description, video_prompt, raw_deepseek: text } }];"
+      },
+      "id": "b2a10001-0001-4001-8001-000000000004",
+      "name": "Parse kids DeepSeek output",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [-672, 520]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://queue.fal.run/fal-ai/kling-video/v3/standard/text-to-video",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ input: { prompt: $json.video_prompt, duration: '15', aspect_ratio: '9:16', generate_audio: true, negative_prompt: 'blur, distort, low quality, scary, violent' } }) }}",
+        "options": {}
+      },
+      "id": "b2a10001-0001-4001-8001-000000000005",
+      "name": "Fal - submit Kling v3",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [-448, 520],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "GgmEC0NWoq9vdPAJ",
+          "name": "Header Auth account 2"
+        }
+      },
+      "notes": "Poll: GET status_url (короткий путь fal-ai/kling-video/requests/…/status). Результат: GET только с ПОЛНЫМ endpoint как у submit: …/fal-ai/kling-video/v3/standard/text-to-video/requests/{request_id} — без /status и /response. Короткий …/kling-video/requests/{id} даёт ошибку про prompt."
+    },
+    {
+      "parameters": { "amount": 25 },
+      "id": "b2a10001-0001-4001-8001-000000000006",
+      "name": "Wait for Kling processing",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [-224, 520],
+      "webhookId": "256d58cb-f171-4a82-8fd5-83574730b81f"
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "={{ $('Fal - submit Kling v3').first().json.status_url }}",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "httpHeaderAuth",
+        "options": {}
+      },
+      "id": "b2a10001-0001-4001-8001-000000000007",
+      "name": "Fal - check Kling status",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [0, 400],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "GgmEC0NWoq9vdPAJ",
+          "name": "Header Auth account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": false,
+            "leftValue": "",
+            "typeValidation": "loose"
+          },
+          "conditions": [
+            {
+              "id": "kid-if-1",
+              "leftValue": "={{ $json.status }}",
+              "rightValue": "COMPLETED",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "b2a10001-0001-4001-8001-000000000008",
+      "name": "Check Kling completed",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [224, 520]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "={{ 'https://queue.fal.run/fal-ai/kling-video/v3/standard/text-to-video/requests/' + ($json.request_id || $('Fal - submit Kling v3').first().json.request_id) }}",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "httpHeaderAuth",
+        "options": {}
+      },
+      "id": "b2a10001-0001-4001-8001-000000000009",
+      "name": "Fal - get Kling result",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [448, 520],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "GgmEC0NWoq9vdPAJ",
+          "name": "Header Auth account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "k1",
+              "name": "videoUrl",
+              "value": "={{ $json.video?.url || $json.data?.video?.url || '' }}",
+              "type": "string"
+            },
+            {
+              "id": "k2",
+              "name": "tiktokTitle",
+              "value": "={{ $('Parse kids DeepSeek output').item.json.title }}",
+              "type": "string"
+            },
+            {
+              "id": "k3",
+              "name": "tiktokCaption",
+              "value": "={{ $('Parse kids DeepSeek output').item.json.description }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "b2a10001-0001-4001-8001-000000000010",
+      "name": "Prepare kids video data",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [672, 520]
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.videoUrl }}",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file"
+            }
+          }
+        }
+      },
+      "id": "b2a10001-0001-4001-8001-000000000011",
+      "name": "Download MP4 (Kids)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [896, 520]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Замени этот узел на публикацию в TikTok (например community: @igabm/n8n-nodes-tiktok — Video Post).\n// Вход: binary от «Download MP4 (Kids)»; подпись: $('Parse kids DeepSeek output').item.json\nreturn $input.all();"
+      },
+      "id": "b2a10001-0001-4001-8001-000000000012",
+      "name": "TikTok upload PLACEHOLDER",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1120, 520],
+      "notes": "Установи @igabm/n8n-nodes-tiktok (или другой TikTok-узел), удали этот Code и подключи Video Post между Download и Prepare row kids."
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "kr1",
+              "name": "generated_at",
+              "value": "={{ $now.toISO() }}",
+              "type": "string"
+            },
+            {
+              "id": "kr2",
+              "name": "kling_prompt",
+              "value": "={{ $('Parse kids DeepSeek output').item.json.video_prompt }}",
+              "type": "string"
+            },
+            {
+              "id": "kr3",
+              "name": "episode_title",
+              "value": "={{ $('Parse kids DeepSeek output').item.json.title }}",
+              "type": "string"
+            },
+            {
+              "id": "kr4",
+              "name": "episode_description",
+              "value": "={{ $('Parse kids DeepSeek output').item.json.description }}",
+              "type": "string"
+            },
+            {
+              "id": "kr5",
+              "name": "tiktok_video_id",
+              "value": "={{ $json.id ?? $json.video_id ?? $json.publish_id ?? '' }}",
+              "type": "string"
+            },
+            {
+              "id": "kr6",
+              "name": "tiktok_url",
+              "value": "={{ $json.url ?? $json.share_url ?? '' }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "b2a10001-0001-4001-8001-000000000013",
+      "name": "Prepare row kids for Sheets",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [1232, 400]
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1N5IbSUUNUoN1X9tLN-0-MzHi9xL0yUM7k7i1ZklK668",
+          "mode": "list",
+          "cachedResultName": "KidsLog",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1N5IbSUUNUoN1X9tLN-0-MzHi9xL0yUM7k7i1ZklK668/edit#gid=0"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Kids (замени gid)",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1N5IbSUUNUoN1X9tLN-0-MzHi9xL0yUM7k7i1ZklK668/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "id": "={{ $json.generated_at }}",
+            "kling_prompt": "={{ $json.kling_prompt }}",
+            "episode_title": "={{ $json.episode_title }}",
+            "episode_description": "={{ $json.episode_description }}",
+            "tiktok_video_id": "={{ $json.tiktok_video_id }}",
+            "tiktok_url": "={{ $json.tiktok_url }}"
+          },
+          "matchingColumns": ["id"],
+          "schema": [
+            {
+              "id": "kling_prompt",
+              "displayName": "kling_prompt",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "episode_title",
+              "displayName": "episode_title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "episode_description",
+              "displayName": "episode_description",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "tiktok_video_id",
+              "displayName": "tiktok_video_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "tiktok_url",
+              "displayName": "tiktok_url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "b2a10001-0001-4001-8001-000000000014",
+      "name": "Google Sheets - append kids episode",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [1344, 520],
+      "notesInFlow": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "sbEr5KyqFvzkdh05",
+          "name": "Google Sheets OAuth2 API"
+        }
+      },
+      "notes": "Создай в таблице колонки: id, kling_prompt, episode_title, episode_description, tiktok_video_id, tiktok_url. Документ/лист — только для детской ветки."
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Every 6 hours": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets - read series log",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Google Sheets - read kids series log",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Sheets - read series log": {
+      "main": [
+        [
+          {
+            "node": "Build DeepSeek context",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build DeepSeek context": {
+      "main": [
+        [
+          {
+            "node": "DeepSeek - prompt for Short",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "DeepSeek - prompt for Short": {
+      "main": [
+        [
+          {
+            "node": "Extract Sora prompt",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Sora prompt": {
+      "main": [
+        [
+          {
+            "node": "Fal - submit Sora 2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fal - submit Sora 2": {
+      "main": [
+        [
+          {
+            "node": "Wait for video processing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download MP4": {
+      "main": [
+        [
+          {
+            "node": "YouTube - upload Short",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "YouTube - upload Short": {
+      "main": [
+        [
+          {
+            "node": "Prepare row for Sheets log",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare row for Sheets log": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets - append episode",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait for video processing": {
+      "main": [
+        [
+          {
+            "node": "Fal - check status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fal - check status": {
+      "main": [
+        [
+          {
+            "node": "Check if completed",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check if completed": {
+      "main": [
+        [
+          {
+            "node": "Fal - get result",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Wait for video processing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fal - get result": {
+      "main": [
+        [
+          {
+            "node": "Prepare video data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare video data": {
+      "main": [
+        [
+          {
+            "node": "Download MP4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Sheets - read kids series log": {
+      "main": [
+        [
+          {
+            "node": "Build DeepSeek context (Kids)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build DeepSeek context (Kids)": {
+      "main": [
+        [
+          {
+            "node": "DeepSeek - Kids titles + Kling prompt",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "DeepSeek - Kids titles + Kling prompt": {
+      "main": [
+        [
+          {
+            "node": "Parse kids DeepSeek output",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse kids DeepSeek output": {
+      "main": [
+        [
+          {
+            "node": "Fal - submit Kling v3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fal - submit Kling v3": {
+      "main": [
+        [
+          {
+            "node": "Wait for Kling processing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait for Kling processing": {
+      "main": [
+        [
+          {
+            "node": "Fal - check Kling status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fal - check Kling status": {
+      "main": [
+        [
+          {
+            "node": "Check Kling completed",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Kling completed": {
+      "main": [
+        [
+          {
+            "node": "Fal - get Kling result",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Wait for Kling processing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fal - get Kling result": {
+      "main": [
+        [
+          {
+            "node": "Prepare kids video data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare kids video data": {
+      "main": [
+        [
+          {
+            "node": "Download MP4 (Kids)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download MP4 (Kids)": {
+      "main": [
+        [
+          {
+            "node": "TikTok upload PLACEHOLDER",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "TikTok upload PLACEHOLDER": {
+      "main": [
+        [
+          {
+            "node": "Prepare row kids for Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare row kids for Sheets": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets - append kids episode",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "meta": {
+    "templateCredsSetupCompleted": false
+  }
+}

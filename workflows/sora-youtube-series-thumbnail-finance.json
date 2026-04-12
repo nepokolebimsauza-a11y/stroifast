@@ -1,0 +1,449 @@
+{
+  "name": "Sora Shorts: серия + обложка (без учёта USD)",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [{ "field": "cronExpression", "expression": "0 */6 * * *" }]
+        }
+      },
+      "id": "478cd4f7-7c6b-4ad3-9a5d-99857060ba0e",
+      "name": "Every 6 hours",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [0, 300]
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1N5IbSUUNUoN1X9tLN-0-MzHi9xL0yUM7k7i1ZklK668",
+          "mode": "list",
+          "cachedResultName": "SeriesLog",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1N5IbSUUNUoN1X9tLN-0-MzHi9xL0yUM7k7i1ZklK668/edit"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Лист1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1N5IbSUUNUoN1X9tLN-0-MzHi9xL0yUM7k7i1ZklK668/edit#gid=0"
+        },
+        "options": {}
+      },
+      "id": "a1000001-0001-4001-8001-000000000001",
+      "name": "Google Sheets - read series log",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [224, 300],
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "sbEr5KyqFvzkdh05",
+          "name": "Google Sheets OAuth2 API"
+        }
+      },
+      "notes": "Подключи свой Google Sheets OAuth (id в JSON — пример из другого workflow; при конфликте перепривяжи). Первая строка листа — заголовки. Чтение: последняя строка даёт sora_prompt или topic для продолжения серии."
+    },
+    {
+      "parameters": {
+        "jsCode": "const rows = $input.all();\nlet previous_prompt = '';\nif (rows.length > 0) {\n  const last = rows[rows.length - 1].json;\n  previous_prompt = String(last.sora_prompt ?? last.topic ?? '').trim();\n}\nconst nextEpisode = rows.length + 1;\n\nconst system = [\n  'You help produce ONE episode of a recurring YouTube Shorts vertical series (9:16). Output MUST use exactly these labels in English, in order, no text before TITLE:.',\n  'TITLE: max 65 characters, click-worthy, matches the episode.',\n  'DESCRIPTION: 2-4 short lines, friendly, one soft CTA (follow for next part), optional #Shorts; you may add one line saying visuals were AI-assisted if appropriate.',\n  'TAGS: exactly 5 to 8 relevant lowercase keywords or short phrases, comma-separated, no #, no duplicates, niche-aligned (no random unrelated words).',\n  'VIDEO_PROMPT: one paragraph only — English Sora-style scene: vertical 9:16, cinematic, strong hook in first second, clear subject and motion, ending on a beat the next episode can continue.',\n  'THUMB_PROMPT: one line — English FLUX image prompt for a vertical cover: bold composition, high contrast, no text/letters in frame, same mood as the episode, eye-catching at small size.',\n  '',\n  'SERIES: If PREVIOUS_VIDEO_PROMPT is non-empty, VIDEO_PROMPT must OPEN as direct continuation of its final beat (same story thread, characters, setting when possible). Otherwise pilot episode with hook.',\n  'CLOSE VIDEO_PROMPT on a transition or micro-cliffhanger. Safe content: no celebrities, brands, gore, adult themes.'\n].join('\\n');\n\nconst user = previous_prompt\n  ? ('Episode number (for your context): ' + nextEpisode + '.\\n\\nPREVIOUS_VIDEO_PROMPT (continue from this ending):\\n\\n' + previous_prompt + '\\n\\nProduce TITLE, DESCRIPTION, TAGS, VIDEO_PROMPT, THUMB_PROMPT for the NEXT episode only.')\n  : ('Episode number: ' + nextEpisode + ' (series premiere). No prior prompt in sheet. Produce TITLE, DESCRIPTION, TAGS, VIDEO_PROMPT, THUMB_PROMPT for episode 1.');\n\nreturn [{ json: {\n  nextEpisode,\n  previous_prompt,\n  deepseekBody: {\n    model: 'deepseek-chat',\n    temperature: 0.85,\n    max_tokens: 1200,\n    messages: [{ role: 'system', content: system }, { role: 'user', content: user }]\n  }\n}}];"
+      },
+      "id": "a1000001-0001-4001-8001-000000000002",
+      "name": "Build series + DeepSeek body",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [448, 300],
+      "notes": "Считает номер эпизода (число строк + 1) и подставляет последний sora_prompt/topic из листа для продолжения."
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.deepseek.com/chat/completions",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "deepSeekApi",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json.deepseekBody) }}",
+        "options": {}
+      },
+      "id": "f058c938-20f6-4d31-b385-0d630cd36d2b",
+      "name": "DeepSeek - prompt for Short",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [672, 300],
+      "credentials": {
+        "deepSeekApi": {
+          "id": "mYqtwF9EFcBfzdBq",
+          "name": "DeepSeek account 2"
+        }
+      },
+      "notes": "Credential без изменений из твоего workflow (2)."
+    },
+    {
+      "parameters": {
+        "jsCode": "const raw = $input.first().json.choices?.[0]?.message?.content;\nconst text = String(raw ?? '').trim();\nfunction grab(label) {\n  const re = new RegExp(label + ':\\\\s*([\\\\s\\\\S]*?)(?=\\\\n[A-Z_]+:|$)', 'i');\n  const m = text.match(re);\n  return m ? m[1].trim() : '';\n}\nconst title = grab('TITLE') || 'AI Short';\nconst description = grab('DESCRIPTION') || '';\nconst tags_csv = grab('TAGS') || 'shorts, ai video, vertical';\nconst video_prompt = grab('VIDEO_PROMPT') || text;\nconst thumb_prompt = grab('THUMB_PROMPT') || ('Bold cinematic vertical key art, no text, high contrast, related to: ' + video_prompt.slice(0, 200));\nconst b = $('Build series + DeepSeek body').first().json;\nreturn [{ json: {\n  title,\n  description,\n  tags_csv,\n  video_prompt,\n  thumb_prompt,\n  nextEpisode: b.nextEpisode,\n  raw_deepseek: text\n}}];"
+      },
+      "id": "a1000001-0001-4001-8001-000000000003",
+      "name": "Parse TITLE TAGS VIDEO THUMB",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [896, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://fal.run/fal-ai/flux/schnell",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ prompt: $json.thumb_prompt, num_images: 1, num_inference_steps: 4, enable_safety_checker: true, image_size: 'portrait_4_3', output_format: 'jpeg' }) }}",
+        "options": { "timeout": 120000 }
+      },
+      "id": "a1000001-0001-4001-8001-000000000004",
+      "name": "Fal - FLUX thumbnail sync",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1120, 300],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "AQqCcSaiQivsBafq",
+          "name": "Header Auth account"
+        }
+      },
+      "notes": "Тот же FAL Key (Authorization: Key …). Синхронный fal.run. Если таймаут — увеличь options.timeout или смени модель в URL на странице fal."
+    },
+    {
+      "parameters": {
+        "jsCode": "const p = $('Parse TITLE TAGS VIDEO THUMB').first().json;\nconst img = $json.images?.[0]?.url || $json.data?.images?.[0]?.url || $json.image?.url || '';\nreturn [{ json: { ...p, thumb_image_url: img } }];"
+      },
+      "id": "a1000001-0001-4001-8001-000000000005",
+      "name": "Merge parse + thumb URL",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1344, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://queue.fal.run/fal-ai/sora-2/text-to-video",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ prompt: $json.video_prompt, aspect_ratio: '9:16', resolution: '720p', duration: 12, delete_video: false }) }}",
+        "options": {}
+      },
+      "id": "5b91aff8-d37c-4af2-a8a5-ad7095d154f5",
+      "name": "Fal - submit Sora 2",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1568, 300],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "AQqCcSaiQivsBafq",
+          "name": "Header Auth account"
+        }
+      },
+      "notes": "Sora 2 на fal: resolution только 720p (1080p даст ошибку). duration — по схеме модели (при ошибке поставь 8). Тот же Header Auth."
+    },
+    {
+      "parameters": { "amount": 15 },
+      "id": "69b61c9b-2639-4c37-8ae4-41d2c55971ba",
+      "name": "Wait for video processing",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [1792, 300],
+      "webhookId": "146d58cb-f171-4a82-8fd5-83574730b80e"
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "={{ $('Fal - submit Sora 2').item.json.status_url }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {}
+      },
+      "id": "ad7993f1-e618-426b-ba90-1d9649a71848",
+      "name": "Fal - check status",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [2016, 220],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "AQqCcSaiQivsBafq",
+          "name": "Header Auth account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": { "caseSensitive": false, "leftValue": "", "typeValidation": "loose" },
+          "conditions": [
+            {
+              "id": "id-1",
+              "leftValue": "={{ $json.status }}",
+              "rightValue": "COMPLETED",
+              "operator": { "type": "string", "operation": "equals" }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "ec2f7822-05b1-4c57-a52f-f9d4f2b9f698",
+      "name": "Check if completed",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [2240, 300]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "={{ $('Fal - submit Sora 2').item.json.response_url }}",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "httpHeaderAuth",
+        "options": {}
+      },
+      "id": "1b544089-5944-4e48-b03f-3d5a35fc3078",
+      "name": "Fal - get result",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [2464, 300],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "AQqCcSaiQivsBafq",
+          "name": "Header Auth account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "id-1",
+              "name": "videoUrl",
+              "value": "={{ $json.video.url }}",
+              "type": "string"
+            },
+            {
+              "id": "id-2",
+              "name": "youtubeTitle",
+              "value": "={{ $('Merge parse + thumb URL').item.json.title }}",
+              "type": "string"
+            },
+            {
+              "id": "id-3",
+              "name": "youtubeDescription",
+              "value": "={{ $('Merge parse + thumb URL').item.json.description + ($('Merge parse + thumb URL').item.json.thumb_image_url ? ('\\n\\nCover art: ' + $('Merge parse + thumb URL').item.json.thumb_image_url) : '') + '\\n\\n#Shorts' }}",
+              "type": "string"
+            },
+            {
+              "id": "id-4",
+              "name": "youtubeTags",
+              "value": "={{ $('Merge parse + thumb URL').item.json.tags_csv }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "fb5a8172-d1f9-4816-931a-155905302ac0",
+      "name": "Prepare video data",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [2688, 300]
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.videoUrl }}",
+        "options": {
+          "response": { "response": { "responseFormat": "file" } }
+        }
+      },
+      "id": "ab43cc0d-c6e2-4f3a-8c2b-67fd9d3a4c9a",
+      "name": "Download MP4",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [2912, 300]
+    },
+    {
+      "parameters": {
+        "resource": "video",
+        "operation": "upload",
+        "title": "={{ $('Prepare video data').item.json.youtubeTitle }}",
+        "regionCode": "US",
+        "categoryId": "22",
+        "options": {
+          "description": "={{ $('Prepare video data').item.json.youtubeDescription }}\n",
+          "embeddable": true,
+          "notifySubscribers": true,
+          "privacyStatus": "public",
+          "tags": "={{ $('Prepare video data').item.json.youtubeTags }}"
+        }
+      },
+      "id": "7cb55b58-2138-472a-bcd1-c264eddb9be1",
+      "name": "YouTube - upload Short",
+      "type": "n8n-nodes-base.youTube",
+      "typeVersion": 1,
+      "position": [3136, 300],
+      "credentials": {
+        "youTubeOAuth2Api": {
+          "id": "C29BMf44fPatLak8",
+          "name": "YouTube account 3"
+        }
+      },
+      "notes": "Тот же YouTube OAuth. Обложка Shorts через API часто ограничена — ссылка на картинку добавлена в описание; при появлении поля thumbnail в узле можно подключить binary."
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "r1",
+              "name": "generated_at",
+              "value": "={{ $now.toISO() }}",
+              "type": "string"
+            },
+            {
+              "id": "r2",
+              "name": "episode",
+              "value": "={{ $('Merge parse + thumb URL').item.json.nextEpisode }}",
+              "type": "string"
+            },
+            {
+              "id": "r3",
+              "name": "sora_prompt",
+              "value": "={{ $('Merge parse + thumb URL').item.json.video_prompt }}",
+              "type": "string"
+            },
+            {
+              "id": "r8",
+              "name": "youtube_url",
+              "value": "={{ 'https://www.youtube.com/watch?v=' + $json.id }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "a1000001-0001-4001-8001-000000000006",
+      "name": "Prepare series row",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [3360, 180],
+      "notes": "Только эпизод, промпт для следующего запуска и ссылка на YouTube."
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1N5IbSUUNUoN1X9tLN-0-MzHi9xL0yUM7k7i1ZklK668",
+          "mode": "list",
+          "cachedResultName": "SeriesLog",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1N5IbSUUNUoN1X9tLN-0-MzHi9xL0yUM7k7i1ZklK668/edit"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Лист1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1N5IbSUUNUoN1X9tLN-0-MzHi9xL0yUM7k7i1ZklK668/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "id": "={{ $json.generated_at }}",
+            "episode": "={{ $json.episode }}",
+            "sora_prompt": "={{ $json.sora_prompt }}",
+            "youtube_url": "={{ $json.youtube_url }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            { "id": "id", "displayName": "id", "type": "string", "canBeUsedToMatch": false, "display": true },
+            { "id": "episode", "displayName": "episode", "type": "string", "canBeUsedToMatch": false, "display": true },
+            { "id": "sora_prompt", "displayName": "sora_prompt", "type": "string", "canBeUsedToMatch": false, "display": true },
+            { "id": "youtube_url", "displayName": "youtube_url", "type": "string", "canBeUsedToMatch": false, "display": true }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "a1000001-0001-4001-8001-000000000007",
+      "name": "Google Sheets - append series row",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [3584, 180],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "sbEr5KyqFvzkdh05",
+          "name": "Google Sheets OAuth2 API"
+        }
+      },
+      "notes": "Строка 1 листа: id | episode | sora_prompt | youtube_url. Чтение серии берёт последнюю строку (sora_prompt или topic). Обнови колонки из листа, если n8n ругается."
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Every 6 hours": {
+      "main": [[{ "node": "Google Sheets - read series log", "type": "main", "index": 0 }]]
+    },
+    "Google Sheets - read series log": {
+      "main": [[{ "node": "Build series + DeepSeek body", "type": "main", "index": 0 }]]
+    },
+    "Build series + DeepSeek body": {
+      "main": [[{ "node": "DeepSeek - prompt for Short", "type": "main", "index": 0 }]]
+    },
+    "DeepSeek - prompt for Short": {
+      "main": [[{ "node": "Parse TITLE TAGS VIDEO THUMB", "type": "main", "index": 0 }]]
+    },
+    "Parse TITLE TAGS VIDEO THUMB": {
+      "main": [[{ "node": "Fal - FLUX thumbnail sync", "type": "main", "index": 0 }]]
+    },
+    "Fal - FLUX thumbnail sync": {
+      "main": [[{ "node": "Merge parse + thumb URL", "type": "main", "index": 0 }]]
+    },
+    "Merge parse + thumb URL": {
+      "main": [[{ "node": "Fal - submit Sora 2", "type": "main", "index": 0 }]]
+    },
+    "Fal - submit Sora 2": {
+      "main": [[{ "node": "Wait for video processing", "type": "main", "index": 0 }]]
+    },
+    "Wait for video processing": {
+      "main": [[{ "node": "Fal - check status", "type": "main", "index": 0 }]]
+    },
+    "Fal - check status": {
+      "main": [[{ "node": "Check if completed", "type": "main", "index": 0 }]]
+    },
+    "Check if completed": {
+      "main": [
+        [{ "node": "Fal - get result", "type": "main", "index": 0 }],
+        [{ "node": "Wait for video processing", "type": "main", "index": 0 }]
+      ]
+    },
+    "Fal - get result": {
+      "main": [[{ "node": "Prepare video data", "type": "main", "index": 0 }]]
+    },
+    "Prepare video data": {
+      "main": [[{ "node": "Download MP4", "type": "main", "index": 0 }]]
+    },
+    "Download MP4": {
+      "main": [[{ "node": "YouTube - upload Short", "type": "main", "index": 0 }]]
+    },
+    "YouTube - upload Short": {
+      "main": [[{ "node": "Prepare series row", "type": "main", "index": 0 }]]
+    },
+    "Prepare series row": {
+      "main": [[{ "node": "Google Sheets - append series row", "type": "main", "index": 0 }]]
+    }
+  },
+  "active": false,
+  "settings": { "executionOrder": "v1", "binaryMode": "separate" },
+  "meta": { "templateCredsSetupCompleted": false },
+  "tags": []
+}
