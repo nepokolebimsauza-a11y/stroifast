@@ -22,7 +22,8 @@ if (strlen($raw) > 65536) {
     exit;
 }
 
-$payload = json_decode($raw, true);
+$jsonFlags = defined('JSON_INVALID_UTF8_SUBSTITUTE') ? JSON_INVALID_UTF8_SUBSTITUTE : 0;
+$payload = json_decode($raw, true, 32, $jsonFlags);
 if (!is_array($payload)) {
     http_response_code(400);
     echo json_encode(['ok' => false, 'error' => 'invalid_json'], JSON_UNESCAPED_UNICODE);
@@ -64,28 +65,44 @@ function rate_limit_allow(string $ip, int $max, int $windowSec): bool
     }
     $file = $dir . DIRECTORY_SEPARATOR . $safe . '.json';
     $now = time();
+    $fp = @fopen($file, 'c+');
+    if ($fp === false) {
+        return true;
+    }
+    if (!flock($fp, LOCK_EX)) {
+        fclose($fp);
+
+        return true;
+    }
+    rewind($fp);
+    $rawFile = stream_get_contents($fp);
     $times = [];
-    if (is_file($file)) {
-        $json = @file_get_contents($file);
-        if (is_string($json) && $json !== '') {
-            $decoded = json_decode($json, true);
-            if (is_array($decoded)) {
-                foreach ($decoded as $t) {
-                    if (is_int($t) || is_float($t)) {
-                        $ti = (int)$t;
-                        if ($ti > $now - $windowSec) {
-                            $times[] = $ti;
-                        }
+    if (is_string($rawFile) && $rawFile !== '') {
+        $decoded = json_decode($rawFile, true, 8);
+        if (is_array($decoded)) {
+            foreach ($decoded as $t) {
+                if (is_int($t) || is_float($t)) {
+                    $ti = (int)$t;
+                    if ($ti > $now - $windowSec) {
+                        $times[] = $ti;
                     }
                 }
             }
         }
     }
     if (count($times) >= $max) {
+        flock($fp, LOCK_UN);
+        fclose($fp);
+
         return false;
     }
     $times[] = $now;
-    @file_put_contents($file, json_encode($times), LOCK_EX);
+    ftruncate($fp, 0);
+    rewind($fp);
+    fwrite($fp, json_encode($times));
+    fflush($fp);
+    flock($fp, LOCK_UN);
+    fclose($fp);
 
     return true;
 }
@@ -102,6 +119,11 @@ $phone = trim((string)($payload['phone'] ?? ''));
 $comment = trim((string)($payload['comment'] ?? ''));
 $context = trim((string)($payload['context'] ?? ''));
 $contact = trim((string)($payload['contact'] ?? ''));
+if (strlen($phone) > 40) {
+    http_response_code(400);
+    echo json_encode(['ok' => false, 'error' => 'invalid_phone'], JSON_UNESCAPED_UNICODE);
+    exit;
+}
 
 $nameLen = function_exists('mb_strlen') ? mb_strlen($name) : strlen($name);
 if ($name === '' || $nameLen > 120) {
@@ -136,6 +158,14 @@ if ((function_exists('mb_strlen') ? mb_strlen($contact) : strlen($contact)) > $c
     exit;
 }
 
+$contactLabels = ['telegram' => 'Telegram', 'whatsapp' => 'WhatsApp', 'max' => 'MAX', 'call' => 'Звонок'];
+if ($contact !== '' && !array_key_exists($contact, $contactLabels)) {
+    http_response_code(400);
+    echo json_encode(['ok' => false, 'error' => 'invalid_contact'], JSON_UNESCAPED_UNICODE);
+    exit;
+}
+$contactHuman = $contact !== '' ? $contactLabels[$contact] : '';
+
 $configPath = __DIR__ . DIRECTORY_SEPARATOR . 'telegram_config.php';
 if (!is_file($configPath)) {
     http_response_code(503);
@@ -157,9 +187,6 @@ if ($token === '' || $chatId === '') {
     echo json_encode(['ok' => false, 'error' => 'telegram_not_configured'], JSON_UNESCAPED_UNICODE);
     exit;
 }
-
-$contactLabels = ['telegram' => 'Telegram', 'whatsapp' => 'WhatsApp', 'max' => 'MAX', 'call' => 'Звонок'];
-$contactHuman = $contactLabels[$contact] ?? $contact;
 
 $lines = [
     'СтройФаст — заявка с сайта',
@@ -208,7 +235,7 @@ if ($response === false) {
     exit;
 }
 
-$tg = json_decode($response, true);
+$tg = json_decode($response, true, 8);
 if (!is_array($tg) || empty($tg['ok'])) {
     http_response_code(502);
     echo json_encode(['ok' => false, 'error' => 'telegram_send_failed'], JSON_UNESCAPED_UNICODE);
